@@ -1,0 +1,570 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asset Management System</title>
+
+    <!-- MaterializeCSS & Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css" />
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+        .select2-container {
+            margin-top: 1.2rem;
+        }
+
+        .select2-selection--single {
+            background-color: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid #9e9e9e !important;
+            border-radius: 0 !important;
+            height: 2.5rem !important;
+            padding-left: 0 !important;
+            font-size: 16px !important;
+        }
+
+        .select2-selection__rendered {
+            color: #000 !important;
+            line-height: 2.5rem !important;
+        }
+
+        .select2-selection__arrow {
+            top: 8px !important;
+        }
+
+        .tabs .tab a {
+            color: #2196f3;
+        }
+
+            .tabs .tab a.active {
+                background-color: #e3f2fd;
+                color: #0d47a1;
+            }
+
+        .tabs .indicator {
+            background-color: #0d47a1;
+        }
+
+        .input-field label {
+            color: #0d47a1;
+        }
+
+        .btn {
+            border-radius: 20px;
+        }
+
+            .btn.add-serial {
+                margin-top: 1rem;
+            }
+
+        .card-panel {
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+        }
+
+        .serial-row .remove-serial {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .brand-logo {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <!-- Navigation -->
+        <nav class="blue darken-3">
+            <div class="nav-wrapper container">
+                <a href="#!" class="brand-logo left">
+                    <img src="dist/assets/images/logo/logo-letter-9.png" alt="Company Logo" style="height: 45px; vertical-align: middle; margin-right: 10px;">
+                    Asset Management System
+                </a>
+
+            </div>
+        </nav>
+
+        <!-- Main Container -->
+        <div class="container" style="padding-left:30px">
+            <!-- Tabs -->
+            <ul class="tabs">
+                <li class="tab col s4"><a href="#create" class="active">Create Asset</a></li>
+                <li class="tab col s4"><a href="#dispatch">Dispatch</a></li>
+                <li class="tab col s4"><a href="#viewAssets">View Assets</a></li>
+            </ul>
+
+            <!-- Create Asset -->
+            <div id="create" class="col s12">
+                <form id="assetForm" class="card-panel z-depth-1">
+                    <h5 class="blue-text">Create Asset</h5>
+
+                    <div class="row">
+                        <div class="input-field col s12 m6 l3">
+                            <input id="orderNumber" name="orderNumber" type="text" required>
+                            <label for="orderNumber">Order Number</label>
+                        </div>
+                        <div class="input-field col s12 m6 l3">
+                            <label for="poDropdown" class="active">ERP Order Number</label>
+                            <select id="poDropdown" name="poDropdown" style="width: 100%"></select>
+                        </div>
+                        <div class="input-field col s12 m6 l3">
+                            <label for="category" class="active">Category</label>
+                            <select id="category" name="category" style="width: 100%"></select>
+                        </div>
+                        <div class="input-field col s12 m6 l3">
+                            <label for="project" class="active">Project</label>
+                            <select id="project" name="project" style="width: 100%"></select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12 m4">
+                            <label for="location" class="active">Location</label>
+                            <select id="location" name="location" style="width: 100%"></select>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input id="make" name="make" type="text" required>
+                            <label for="make">Make</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input id="model" name="model" type="text" required>
+                            <label for="model">Model</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12 m4">
+                            <label for="condition" class="active">Condition</label>
+                            <select id="condition" name="condition" style="width: 100%"></select>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <label for="currency" class="active">Currency</label>
+                            <select id="currency" name="currency" style="width: 100%"></select>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input id="price" name="price" type="number" required>
+                            <label for="price">Price</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12 m4">
+                            <input type="date" id="purchaseDate" name="purchaseDate" required>
+                            <label class="active" for="purchaseDate">Purchase Date</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input type="date" id="dateReceived" name="dateReceived" required>
+                            <label class="active" for="dateReceived">Date Received</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input id="comment" name="comment" type="text">
+                            <label for="comment">Comment</label>
+                        </div>
+                    </div>
+
+                    <div id="serialContainer">
+                        <div class="row serial-row">
+                            <div class="input-field col s10">
+                                <input name="serial[]" type="text" required placeholder="Serial Number">
+                            </div>
+                            <div class="col s2">
+                                <button class="btn-floating red remove-serial" type="button"><i class="material-icons">remove</i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <button class="btn blue add-serial" type="button"><i class="material-icons left">add</i>Add Serial</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <button type="submit" class="btn green">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Dispatch Asset -->
+            <div id="dispatch" class="col s12">
+                <form id="dispatchForm" class="card-panel z-depth-1">
+                    <h5 class="blue-text">Dispatch Asset</h5>
+
+                    <div class="row">
+                        <div class="input-field col s12 m4">
+                            <label for="serialDropdown" class="active">Serial Number</label>
+                            <select id="serialDropdown" name="serial" style="width: 100%" required></select>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <label for="employeeDropdown" class="active">Employee</label>
+                            <select id="employeeDropdown" name="employeeId" style="width: 100%" required></select>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <label for="dispatchLocation" class="active">Dispatch Location</label>
+                            <select id="dispatchLocation" name="locationId" style="width: 100%" required></select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <button type="submit" class="btn green">Dispatch</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- View Assets -->
+            <div id="viewAssets" class="col s12">
+                <h5 class="blue-text">All Assets</h5>
+                <table class="highlight responsive-table card-panel" id="stockTable">
+                    <thead>
+                        <tr>
+                            <th>Actions</th>
+                            <th>Order No</th>
+                            <th>Serial No</th>
+                            <th>Make</th>
+                            <th>Model</th>
+                            <th>Category</th>
+                            <th>Project</th>
+                            <th>Condition</th>
+                            <th>Status</th>
+                            <th>Location</th>
+                            <th>Price</th>
+                            <th>Currency</th>
+                            <th>Purchased</th>
+                            <th>Received</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("name");
+
+        if (!token || !name) {
+            window.location.href = "login.html"; // Redirect if not logged in
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            M.Tabs.init(document.querySelectorAll('.tabs'));
+
+            $(document).ready(function () {
+                ['#poDropdown', '#category', '#project', '#location', '#condition', '#currency', '#serialDropdown', '#employeeDropdown', '#dispatchLocation'].forEach(id => {
+                    $(id).select2({
+                        placeholder: "Select...",
+                        allowClear: true,
+                        width: 'resolve'
+                    });
+                });
+
+
+            });
+        });
+
+        function populateDropdown(selectId, apiUrl, textKey, valueKey = 'id') {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const select = $("#" + selectId);
+                    select.empty().append('<option></option>');
+                    data.forEach(item => {
+                        const option = new Option(item[textKey], item[valueKey], false, false);
+                        select.append(option);
+                    });
+                    select.trigger('change');
+                })
+                .catch(error => console.error(`Error loading ${selectId}:`, error));
+        }
+
+        // Populate dropdowns
+        populateDropdown('category', '/api/categories', 'category');
+        populateDropdown('project', '/api/projects', 'code');
+        populateDropdown('location', '/api/locations', 'location');
+        populateDropdown('condition', '/api/conditions', 'condition');
+        populateDropdown('currency', '/api/currencies', 'currency');
+        populateDropdown('serialDropdown', '/api/Stock/warehouseserials', 'makeModel');
+        populateDropdown('employeeDropdown', '/api/Employee/employees', 'fullname'); // adjust `name` to your actual field
+        populateDropdown('dispatchLocation', '/api/locations', 'location');
+        document.getElementById('orderNumber').addEventListener('input', function () {
+            const input = this.value.trim();
+            if (input.length >= 4) {
+                const last4Digits = input.slice(-4);
+                fetch(`/api/orders/search?digits=${last4Digits}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const dropdown = $('#poDropdown');
+                        dropdown.empty().append('<option></option>');
+                        data.forEach(order => {
+                            const option = new Option(order, order, false, false);
+                            dropdown.append(option);
+                        });
+                        dropdown.trigger('change');
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+    </script>
+
+    <!--Post Create Asset-->
+    <script>
+        $(document).ready(function () {
+            $('#assetForm').submit(function (e) {
+                e.preventDefault();
+
+                const formData = {
+               
+                    orderNumber: $('#poDropdown').val(),
+                    CategoryId: $('#category').val(),
+                    ProjectId: $('#project').val(),
+                    LocationId: $('#location').val(),
+                    make: $('#make').val(),
+                    model: $('#model').val(),
+                    ConditionId: $('#condition').val(),
+                    currencyId: $('#currency').val(),
+                    PurchasePrice: $('#price').val(),
+                    purchaseDate: $('#purchaseDate').val(),
+                    DateReceived: $('#dateReceived').val(),
+                    Comment: $('#comment').val()
+                };
+
+                const serials = $('input[name="serial[]"]').map(function () {
+                    return $(this).val();
+                }).get();
+
+                // Prepare all assets as an array of objects
+                const assets = serials.map(serial => {
+                    return { ...formData, SerialNo: serial };
+                });
+                console.log(JSON.stringify(assets));
+                assets.forEach(asset => {
+                    asset.CategoryId = parseInt(asset.CategoryId);
+                    asset.ProjectId = parseInt(asset.ProjectId);
+                    asset.LocationId = parseInt(asset.LocationId);
+                    asset.ConditionId = parseInt(asset.ConditionId);
+                    asset.CurrencyId = parseInt(asset.CurrencyId);
+                    asset.PurchasePrice = asset.PurchasePrice;
+                });
+                // Send the batch request
+                fetch('/api/Stock/CreateBatch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(assets)
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        console.log(response.json);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Success:', data);
+                        window.location.reload();
+                    })
+                    .catch(error => console.error('Error:', error));
+                    
+
+            });
+
+            // Optional: add-serial button logic
+            $('.add-serial').on('click', function () {
+                $('#serialContainer').append(`
+                                                            <div class="row serial-row">
+                                                                <div class="input-field col s10">
+                                                                    <input name="serial[]" type="text" required placeholder="Serial Number">
+                                                                </div>
+                                                                <div class="col s2">
+                                                                    <button class="btn red remove-serial" type="button"><i class="material-icons">remove</i></button>
+                                                                </div>
+                                                            </div>
+                                                        `);
+            });
+
+            // Optional: remove-serial button logic
+            $('#serialContainer').on('click', '.remove-serial', function () {
+                $(this).closest('.serial-row').remove();
+            });
+        });
+    </script>
+
+    <!--Post Dispatch-->
+    <script>
+        document.getElementById('dispatchForm').addEventListener('submit', async function (e) {
+            e.preventDefault(); // prevent the default form submission
+
+            const serial = document.getElementById('serialDropdown').value;
+            const employeeId = document.getElementById('employeeDropdown').value;
+            const locationId = document.getElementById('dispatchLocation').value;
+
+            const payload = {
+                StockId: serial,
+                EmployeeId: employeeId,
+                LocationId: locationId
+            };
+
+            try {
+                const response = await fetch('api/Stock/dispatch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('Asset dispatched successfully!');
+                    // Optionally reset the form or update UI
+                    window.location.reload();
+                    document.getElementById('dispatchForm').reset();
+                } else {
+                    const errorText = await response.text();
+                    alert('Dispatch failed: ' + errorText);
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            }
+        });
+    </script>
+
+    <!-- DataTables and Buttons dependencies -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+
+    <script>
+        let stockTable;
+
+        function fetchStockAssets() {
+            fetch('/api/Stock/stoks')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Fetched data:", data);
+
+                    if ($.fn.dataTable.isDataTable('#stockTable')) {
+                        // If already initialized, just update the data
+                        stockTable.clear().rows.add(data).draw();
+                    } else {
+                        // Initialize the DataTable
+                        console.log("datatable is not initialized");
+                        stockTable = $('#stockTable').DataTable({
+                            data: data,
+                            responsive: true,
+                            dom: 'Bfrtip',
+                            buttons: [
+                                'copyHtml5',
+                                'excelHtml5',
+                                'csvHtml5',
+                                'pdfHtml5',
+                                'print'
+                            ],
+                            columns: [
+                                {
+                                    data: null,
+                                    render: function (data, type, row) {
+                                        return `<button class="btn yellow btn-small" data-id="${row.id}"'>Edit</button>`;
+
+                                    }
+                                },
+                                { data: 'orderNumber' },
+                                { data: 'serialNo' },
+                                { data: 'make' },
+                                { data: 'model' },
+                                { data: 'category' },
+                                { data: 'project' },
+                                { data: 'condition' },
+                                { data: 'stockStatus' },
+                                { data: 'location' },
+                                { data: 'purchasePrice' },
+                                { data: 'currency' },
+                                { data: 'purchaseDate' },
+                                { data: 'dateReceived' },
+                                { data: 'description' }
+                            ]
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading stock assets:', error));
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            M.Tabs.init(document.querySelectorAll('.tabs'), {
+                onShow: function (tab) {
+
+                    if (tab.id === 'viewAssets') {
+
+                        fetchStockAssets();
+                    }
+                }
+            });
+        });
+    </script>
+    <footer class="page-footer blue darken-3">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m6">
+                    <h6 class="white-text">Asset Management System</h6>
+                    <p class="grey-text text-lighten-4">Track assigned, borrowed, and maintenance items with ease.</p>
+                </div>
+                <div class="col s12 m4 offset-m2">
+                    <h6 class="white-text">Links</h6>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#create">Add Asset</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#dispatch">Dispatch Asset From Warehouse</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#view">View assets in Warehouse</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container center-align">
+                 ©2025 Centre For Infectious Disease Research in Zambia. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

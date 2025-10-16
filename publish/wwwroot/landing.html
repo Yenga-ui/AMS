@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard - Asset Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+
+        body {
+            display: flex; /* 👈 Make body a flex container */
+            flex-direction: column; /* 👈 Stack header, main, and footer vertically */
+            min-height: 100vh; /* 👈 Ensure full height */
+        }
+
+        main {
+            flex: 1; /* 👈 Fills remaining space between header and footer */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #1976d2;
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+            .logo img {
+                height: 50px;
+            }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+
+            .header-title h1 {
+                margin: 0;
+                font-size: 1.8rem;
+            }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-icon {
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: absolute;
+            right: 0;
+            top: 3.5rem;
+            background: white;
+            color: #333;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: none;
+            flex-direction: column;
+            min-width: 150px;
+            z-index: 1000;
+        }
+
+            .dropdown a {
+                padding: 0.75rem 1rem;
+                text-decoration: none;
+                color: #333;
+                border-bottom: 1px solid #eee;
+            }
+
+                .dropdown a:hover {
+                    background-color: #f0f0f0;
+                }
+
+        .grid {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 2rem 1rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            flex: 1 1 250px;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+
+            .card i {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+                color: #1976d2;
+            }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #1976d2;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .header-title {
+                order: 2;
+                margin: 1rem 0;
+            }
+
+            .user-menu {
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="dist/assets/images/logo/logo-letter-9.png" alt="CIDRZ Logo" />
+        </div>
+        <div class="header-title">
+            <h1>Asset Management System</h1>
+            <p>Manage assets across Warehouse, ICT, and Inventory</p>
+        </div>
+        <div class="user-menu">
+            <span class="material-icons user-icon" onclick="toggleDropdown()">account_circle</span>
+            <div class="dropdown" id="userDropdown">
+                <div id="user-name" style="margin-top: 0.5rem; font-weight: bold; font-size: 0.9rem; text-align: center;"></div>
+                <a href="#">Profile</a>
+                <a href="#">Settings</a>
+                <a href="#" id="logout">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="grid">
+            <a href="index2.html" class="card">
+                <i class="material-icons">store</i>
+                <h3>Warehouse</h3>
+            </a>
+            <a href="index3.html" class="card">
+                <i class="material-icons">computer</i>
+                <h3>ICT</h3>
+            </a>
+            <a href="view_items.html" class="card">
+                <i class="material-icons">inventory_2</i>
+                <h3>Inventory</h3>
+            </a>
+            <a href="view_items.html" class="card">
+                <i class="material-icons">group</i>
+                <h3>User Management</h3>
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        © 2025 Centre for Infectious Disease Research in Zambia.
+    </footer>
+
+    <script>
+        // Check login status
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("name");
+
+        if (!token || !name) {
+            window.location.href = "login.html"; // Redirect if not logged in
+        }
+
+        // Set the username in the dropdown
+        document.getElementById("user-name").textContent = name;
+
+        // Toggle dropdown visibility
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Attach logout functionality
+        document.getElementById("logout").addEventListener("click", function () {
+            localStorage.removeItem("token");
+            localStorage.removeItem("name");
+            window.location.href = "login.html";
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function (e) {
+            const dropdown = document.getElementById('userDropdown');
+            const icon = document.querySelector('.user-icon');
+            if (!dropdown.contains(e.target) && !icon.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>

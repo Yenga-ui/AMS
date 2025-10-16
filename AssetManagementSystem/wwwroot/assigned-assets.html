@@ -1,0 +1,737 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assigned Assets - Asset Management System</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --primary-light: #e8f0fe;
+            --secondary: #5f6368;
+            --success: #34a853;
+            --warning: #f9ab00;
+            --danger: #ea4335;
+            --light: #f8f9fa;
+            --dark: #202124;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            height: 64px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 36px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 240px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 24px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: var(--secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+            .nav-item:hover {
+                background-color: var(--primary-light);
+                color: var(--primary);
+            }
+
+            .nav-item.active {
+                background-color: var(--primary-light);
+                color: var(--primary);
+                border-left-color: var(--primary);
+                font-weight: 600;
+            }
+
+            .nav-item i {
+                margin-right: 12px;
+                font-size: 20px;
+            }
+
+        .content {
+            flex: 1;
+            padding: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--dark);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .dataTables_wrapper {
+            padding: 0 24px 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            table thead {
+                background-color: #f8f9fa;
+            }
+
+            table th {
+                padding: 16px;
+                text-align: left;
+                font-weight: 600;
+                color: var(--secondary);
+                border-bottom: 1px solid #eee;
+            }
+
+            table td {
+                padding: 16px;
+                border-bottom: 1px solid #eee;
+            }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+            }
+
+        .btn-return {
+            background-color: var(--success);
+            color: white;
+        }
+
+            .btn-return:hover {
+                background-color: #2e7d32;
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 90%;
+            max-width: 500px;
+            padding: 24px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px var(--primary-light);
+            }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 16px 0;
+            }
+
+            .nav-item {
+                padding: 12px 16px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="dist/assets/images/logo/logo-letter-9.png" alt="Company Logo" class="logo">
+                <span class="logo-text">Asset Management System</span>
+            </div>
+            <div class="user-info">
+                <span id="userName">John Doe</span>
+                <div class="user-avatar">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <a href="index.html" class="nav-item">
+                <i class="material-icons">dashboard</i>
+                <span>Dashboard</span>
+            </a>
+            <a href="all-assets.html" class="nav-item">
+                <i class="material-icons">inventory_2</i>
+                <span>All Assets</span>
+            </a>
+            <a href="assigned-assets.html" class="nav-item active">
+                <i class="material-icons">assignment_ind</i>
+                <span>Assigned Assets</span>
+            </a>
+            <a href="borrowed-assets.html" class="nav-item">
+                <i class="material-icons">book</i>
+                <span>Borrowed Assets</span>
+            </a>
+            <a href="maintenance.html" class="nav-item">
+                <i class="material-icons">build</i>
+                <span>Maintenance</span>
+            </a>
+            <a href="employees.html" class="nav-item">
+                <i class="material-icons">people</i>
+                <span>Employees</span>
+            </a>
+            <a href="locations.html" class="nav-item">
+                <i class="material-icons">location_on</i>
+                <span>Locations</span>
+            </a>
+            <a href="reports.html" class="nav-item">
+                <i class="material-icons">assessment</i>
+                <span>Reports</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="material-icons">settings</i>
+                <span>Settings</span>
+            </a>
+        </aside>
+
+        <main class="content">
+            <h1 class="page-title">Assigned Assets</h1>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Currently Assigned Assets</h3>
+                    <button class="btn btn-primary" onclick="openAssignModal()">
+                        <i class="material-icons">add</i>
+                        Assign Asset
+                    </button>
+                </div>
+                <div class="dataTables-container">
+                    <table id="assignedAssetsTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>Assignment ID</th>
+                                <th>Asset</th>
+                                <th>Employee</th>
+                                <th>Location</th>
+                                <th>Project</th>
+                                <th>Date Assigned</th>
+                                <th>Comments</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignedAssetsTableBody">
+                            <!-- Assigned assets will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Assign Asset Modal -->
+    <div id="assignModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Assign Asset</h3>
+                <button class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="assignForm">
+                <div class="form-group">
+                    <label for="assetSelect" class="form-label">Select Asset</label>
+                    <select id="assetSelect" class="form-input" required>
+                        <option value="">Select an asset...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="employeeSelect" class="form-label">Select Employee</label>
+                    <select id="employeeSelect" class="form-input" required>
+                        <option value="">Select an employee...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="locationSelect" class="form-label">Select Location</label>
+                    <select id="locationSelect" class="form-input" required>
+                        <option value="">Select a location...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="projectSelect" class="form-label">Select Project</label>
+                    <select id="projectSelect" class="form-input" required>
+                        <option value="">Select a project...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comments" class="form-label">Comments</label>
+                    <textarea id="comments" class="form-input" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Assign Asset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Return Asset Modal -->
+    <div id="returnModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Return Asset</h3>
+                <button class="close" onclick="closeReturnModal()">&times;</button>
+            </div>
+            <form id="returnForm">
+                <input type="hidden" id="returnStockId">
+                <div class="form-group">
+                    <p>Are you sure you want to return this asset?</p>
+                    <p><strong>Asset:</strong> <span id="returnAssetName"></span></p>
+                    <p><strong>Assigned to:</strong> <span id="returnEmployeeName"></span></p>
+                </div>
+                <div class="form-group">
+                    <label for="returnComments" class="form-label">Return Comments</label>
+                    <textarea id="returnComments" class="form-input" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeReturnModal()">Cancel</button>
+                    <button type="submit" class="btn btn-return">Return Asset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("name");
+
+        if (!token || !name) {
+            window.location.href = "login.html";
+        }
+
+        let assignedAssetsDataTable;
+        let availableAssets = [];
+        let employees = [];
+        let locations = [];
+        let projects = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('userName').textContent = name;
+            loadAssignedAssets();
+            loadDropdownData();
+
+            // Form submission handlers
+            document.getElementById('assignForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                assignAsset();
+            });
+
+            document.getElementById('returnForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                returnAsset();
+            });
+        });
+
+        function loadAssignedAssets() {
+            fetch('/api/Asset/assigned?PageSize=1000') // Large page size to get all records
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch assigned assets');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (assignedAssetsDataTable) {
+                        assignedAssetsDataTable.destroy();
+                    }
+
+                    const tableBody = document.getElementById('assignedAssetsTableBody');
+                    tableBody.innerHTML = '';
+
+                    data.data.forEach(assignment => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                <td>${assignment.id}</td>
+                                <td>${assignment.asset}</td>
+                                <td>${assignment.employee}</td>
+                                <td>${assignment.location}</td>
+                                <td>${assignment.project}</td>
+                                <td>${formatDate(assignment.dateAssigned)}</td>
+                                <td>${assignment.comments || 'N/A'}</td>
+                                <td>
+                                    <button class="btn btn-return" onclick="openReturnModal(${assignment.assetId}, '${assignment.asset}', '${assignment.employee}')">
+                                        <i class="material-icons">keyboard_return</i>
+                                        Return
+                                    </button>
+                                </td>
+                            `;
+                        tableBody.appendChild(row);
+                    });
+
+                    assignedAssetsDataTable = $('#assignedAssetsTable').DataTable({
+                        pageLength: 10,
+                        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                        order: [[5, 'desc']]
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading assigned assets:', error);
+                    showToast('Failed to load assigned assets', 'error');
+                });
+        }
+
+        function loadDropdownData() {
+            // Load available assets
+            fetch('/api/Asset/available')
+                .then(response => response.json())
+                .then(assets => {
+                    availableAssets = assets;
+                    const assetSelect = document.getElementById('assetSelect');
+                    assetSelect.innerHTML = '<option value="">Select an asset...</option>';
+                    assets.forEach(asset => {
+                        const option = document.createElement('option');
+                        option.value = asset.id;
+                        option.textContent = asset.makeModel;
+                        assetSelect.appendChild(option);
+                    });
+                });
+
+            // Load employees (you'll need to create this endpoint)
+            fetch('/api/Employee/employees')
+                .then(response => response.json())
+                .then(emps => {
+                    employees = emps;
+                    const employeeSelect = document.getElementById('employeeSelect');
+                    employeeSelect.innerHTML = '<option value="">Select an employee...</option>';
+                    emps.forEach(emp => {
+                        const option = document.createElement('option');
+                        option.value = emp.id;
+                        option.textContent = emp.fullname;
+                        employeeSelect.appendChild(option);
+                    });
+                });
+
+            // Load locations
+            fetch('/api/Location/locations')
+                .then(response => response.json())
+                .then(locs => {
+                    locations = locs;
+                    const locationSelect = document.getElementById('locationSelect');
+                    locationSelect.innerHTML = '<option value="">Select a location...</option>';
+                    locs.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc.id;
+                        option.textContent = loc.location;
+                        locationSelect.appendChild(option);
+                    });
+                });
+
+            // Load projects (you'll need to create this endpoint)
+            fetch('/api/Project/projects')
+                .then(response => response.json())
+                .then(projs => {
+                    projects = projs;
+                    const projectSelect = document.getElementById('projectSelect');
+                    projectSelect.innerHTML = '<option value="">Select a project...</option>';
+                    projs.forEach(proj => {
+                        const option = document.createElement('option');
+                        option.value = proj.id;
+                        option.textContent = proj.project;
+                        projectSelect.appendChild(option);
+                    });
+                });
+        }
+
+        function openAssignModal() {
+            document.getElementById('assignModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('assignModal').style.display = 'none';
+            document.getElementById('assignForm').reset();
+        }
+
+        function openReturnModal(stockId, assetName, employeeName) {
+            document.getElementById('returnStockId').value = stockId;
+            document.getElementById('returnAssetName').textContent = assetName;
+            document.getElementById('returnEmployeeName').textContent = employeeName;
+            document.getElementById('returnModal').style.display = 'flex';
+        }
+
+        function closeReturnModal() {
+            document.getElementById('returnModal').style.display = 'none';
+            document.getElementById('returnForm').reset();
+        }
+
+        function assignAsset() {
+            const formData = {
+                stockId: parseInt(document.getElementById('assetSelect').value),
+                employeeId: parseInt(document.getElementById('employeeSelect').value),
+                locationId: parseInt(document.getElementById('locationSelect').value),
+                projectId: parseInt(document.getElementById('projectSelect').value),
+                comments: document.getElementById('comments').value
+            };
+
+            fetch('/api/Asset/assign', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(text || 'Failed to assign asset');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    showToast('Asset assigned successfully', 'success');
+                    closeModal();
+                    loadAssignedAssets();
+                    loadDropdownData(); // Reload available assets
+                })
+                .catch(error => {
+                    console.error('Error assigning asset:', error);
+                    showToast(error.message || 'Failed to assign asset', 'error');
+                });
+        }
+
+        function returnAsset() {
+            const formData = {
+                stockId: parseInt(document.getElementById('returnStockId').value),
+                comments: document.getElementById('returnComments').value
+            };
+
+            fetch('/api/Asset/return', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(text || 'Failed to return asset');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    showToast('Asset returned successfully', 'success');
+                    closeReturnModal();
+                    loadAssignedAssets();
+                    loadDropdownData(); // Reload available assets
+                })
+                .catch(error => {
+                    console.error('Error returning asset:', error);
+                    showToast(error.message || 'Failed to return asset', 'error');
+                });
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 1000;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                `;
+
+            toast.style.backgroundColor = type === 'error' ? 'var(--danger)' :
+                type === 'success' ? 'var(--success)' : 'var(--primary)';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

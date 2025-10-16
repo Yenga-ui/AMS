@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Asset Tag</title>
+    <script src="https://unpkg.com/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <style>
+        @page {
+            size: 100mm 40mm;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+            }
+
+                body * {
+                    visibility: hidden;
+                }
+
+            #tagContainer, #tagContainer * {
+                visibility: visible;
+            }
+
+            #tagContainer {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100mm;
+                height: 40mm;
+            }
+
+            .print-btn {
+                display: none;
+            }
+        }
+
+        body {
+            font-family: "Courier New", monospace;
+            padding: 10px;
+            background: white;
+        }
+
+        #tagContainer {
+            width: 100mm;
+            height: 40mm;
+            border: 3px double black;
+            box-sizing: border-box;
+            padding: 4mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+        }
+
+        .details {
+            font-size: 3.5mm;
+            line-height: 1.4;
+        }
+
+        .barcode {
+            margin-top: 1mm;
+        }
+
+        .asset-number {
+            font-size: 4mm;
+            font-weight: bold;
+            letter-spacing: 1mm;
+            margin-top: 1mm;
+        }
+
+        .print-btn {
+            margin-top: 15px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="tagContainer">
+        <div class="details">
+            <strong>LENOVO IDEAPAD DUET 3 TABLET</strong><br>
+            S/N: YX028K27<br>
+            CHIBOLYA WELLNESS CENTRE - KPIF P139<br>
+            LUSAKA
+        </div>
+
+        <svg id="barcode" class="barcode"></svg>
+
+        <div class="asset-number">* IT 7766 *</div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Print Tag</button>
+
+    <script>
+
+
+        // Generate barcode
+        JsBarcode("#barcode", "IT7766", {
+            format: "CODE128",
+            displayValue: false,
+            width: 1.2,
+            height: 20,
+            margin: 0
+        });
+    </script>
+
+</body>
+</html>

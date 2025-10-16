@@ -1,0 +1,576 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings - Asset Management System</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --primary-light: #e8f0fe;
+            --secondary: #5f6368;
+            --success: #34a853;
+            --warning: #f9ab00;
+            --danger: #ea4335;
+            --light: #f8f9fa;
+            --dark: #202124;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            height: 64px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 36px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            width: 240px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 24px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: var(--secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+            .nav-item:hover {
+                background-color: var(--primary-light);
+                color: var(--primary);
+            }
+
+            .nav-item.active {
+                background-color: var(--primary-light);
+                color: var(--primary);
+                border-left-color: var(--primary);
+                font-weight: 600;
+            }
+
+            .nav-item i {
+                margin-right: 12px;
+                font-size: 20px;
+            }
+
+        .content {
+            flex: 1;
+            padding: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--dark);
+        }
+
+        .settings-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+        }
+
+        .settings-tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--secondary);
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+            .settings-tab:hover {
+                color: var(--primary);
+                background: rgba(26, 115, 232, 0.05);
+            }
+
+            .settings-tab.active {
+                color: var(--primary);
+                border-bottom-color: var(--primary);
+                background: white;
+            }
+
+        .settings-content {
+            display: none;
+            padding: 24px;
+        }
+
+            .settings-content.active {
+                display: block;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+            }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+            .btn-outline:hover {
+                background-color: var(--primary-light);
+            }
+
+        .settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #eee;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+            .toggle-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+            .toggle-slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+            input:checked + .toggle-slider:before {
+                transform: translateX(26px);
+            }
+
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+            .toggle-container:last-child {
+                border-bottom: none;
+            }
+
+        .toggle-label {
+            font-weight: 500;
+        }
+
+        .toggle-description {
+            font-size: 14px;
+            color: var(--secondary);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 16px 0;
+            }
+
+            .nav-item {
+                padding: 12px 16px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .settings-tabs {
+                flex-direction: column;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="dist/assets/images/logo/logo-letter-9.png" alt="Company Logo" class="logo">
+                <span class="logo-text">Asset Management System</span>
+            </div>
+            <div class="user-info">
+                <span id="userName">John Doe</span>
+                <div class="user-avatar">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <a href="index.html" class="nav-item">
+                <i class="material-icons">dashboard</i>
+                <span>Dashboard</span>
+            </a>
+            <a href="all-assets.html" class="nav-item">
+                <i class="material-icons">inventory_2</i>
+                <span>All Assets</span>
+            </a>
+            <a href="assigned-assets.html" class="nav-item">
+                <i class="material-icons">assignment_ind</i>
+                <span>Assigned Assets</span>
+            </a>
+            <a href="borrowed-assets.html" class="nav-item">
+                <i class="material-icons">book</i>
+                <span>Borrowed Assets</span>
+            </a>
+            <a href="maintenance.html" class="nav-item">
+                <i class="material-icons">build</i>
+                <span>Maintenance</span>
+            </a>
+            <a href="employees.html" class="nav-item">
+                <i class="material-icons">people</i>
+                <span>Employees</span>
+            </a>
+            <a href="locations.html" class="nav-item">
+                <i class="material-icons">location_on</i>
+                <span>Locations</span>
+            </a>
+            <a href="reports.html" class="nav-item">
+                <i class="material-icons">assessment</i>
+                <span>Reports</span>
+            </a>
+            <a href="settings.html" class="nav-item active">
+                <i class="material-icons">settings</i>
+                <span>Settings</span>
+            </a>
+        </aside>
+
+        <main class="content">
+            <h1 class="page-title">System Settings</h1>
+
+            <div class="settings-container">
+                <div class="settings-tabs">
+                    <div class="settings-tab active" data-tab="general">General</div>
+                    <div class="settings-tab" data-tab="notifications">Notifications</div>
+                    <div class="settings-tab" data-tab="users">User Management</div>
+                    <div class="settings-tab" data-tab="backup">Backup & Export</div>
+                </div>
+
+                <div id="general" class="settings-content active">
+                    <h3>General Settings</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companyName" class="form-label">Company Name</label>
+                            <input type="text" id="companyName" class="form-control" value="Your Company Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="timezone" class="form-label">Timezone</label>
+                            <select id="timezone" class="form-control">
+                                <option>UTC-05:00 Eastern Time</option>
+                                <option>UTC-06:00 Central Time</option>
+                                <option>UTC-07:00 Mountain Time</option>
+                                <option>UTC-08:00 Pacific Time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dateFormat" class="form-label">Date Format</label>
+                            <select id="dateFormat" class="form-control">
+                                <option>MM/DD/YYYY</option>
+                                <option>DD/MM/YYYY</option>
+                                <option>YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="language" class="form-label">Language</label>
+                            <select id="language" class="form-control">
+                                <option>English</option>
+                                <option>Spanish</option>
+                                <option>French</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-actions">
+                        <button class="btn btn-outline">Cancel</button>
+                        <button class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+
+                <div id="notifications" class="settings-content">
+                    <h3>Notification Settings</h3>
+                    <div class="toggle-container">
+                        <div>
+                            <div class="toggle-label">Email Notifications</div>
+                            <div class="toggle-description">Receive email notifications for important system events</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-container">
+                        <div>
+                            <div class="toggle-label">Maintenance Alerts</div>
+                            <div class="toggle-description">Get notified when maintenance requests are submitted</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-container">
+                        <div>
+                            <div class="toggle-label">Asset Assignment Notifications</div>
+                            <div class="toggle-description">Receive notifications when assets are assigned or returned</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-container">
+                        <div>
+                            <div class="toggle-label">Weekly Reports</div>
+                            <div class="toggle-description">Automatically receive weekly asset management reports</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-actions">
+                        <button class="btn btn-outline">Cancel</button>
+                        <button class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+
+                <div id="users" class="settings-content">
+                    <h3>User Management</h3>
+                    <p>Manage system users and their permissions.</p>
+                    <div class="settings-actions">
+                        <button class="btn btn-primary" onclick="window.location.href='management.html'">
+                            <i class="material-icons">people</i>Manage Users
+                        </button>
+                    </div>
+                </div>
+
+                <div id="backup" class="settings-content">
+                    <h3>Backup & Export</h3>
+                    <div class="form-group">
+                        <label class="form-label">Automatic Backups</label>
+                        <select class="form-control">
+                            <option>Daily</option>
+                            <option>Weekly</option>
+                            <option>Monthly</option>
+                            <option>Never</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Export Data</label>
+                        <div>
+                            <button class="btn btn-outline">
+                                <i class="material-icons">file_download</i>Export Assets
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="material-icons">file_download</i>Export Users
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="material-icons">file_download</i>Export Reports
+                            </button>
+                        </div>
+                    </div>
+                    <div class="settings-actions">
+                        <button class="btn btn-primary">Backup Now</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("name");
+
+        if (!token || !name) {
+            window.location.href = "login.html";
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('userName').textContent = name;
+
+            // Initialize settings tabs
+            const tabs = document.querySelectorAll('.settings-tab');
+            const contents = document.querySelectorAll('.settings-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

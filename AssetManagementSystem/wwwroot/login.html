@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login - Asset Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --primary-light: #e8f0fe;
+            --secondary: #5f6368;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+            .login-box img {
+                height: 60px;
+                margin-bottom: 15px;
+            }
+
+            .login-box h2 {
+                margin-bottom: 25px;
+                color: var(--primary);
+                font-size: 24px;
+                font-weight: 600;
+            }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+            input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+            }
+
+        button {
+            width: 100%;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--primary);
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            button:hover {
+                background-color: var(--primary-dark);
+            }
+
+        .error-message {
+            color: #ea4335;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .footer-text {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Spinner Overlay */
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .login-box {
+                padding: 30px;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Spinner Overlay -->
+    <div class="spinner-overlay" id="spinnerOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="login-box">
+        <img src="dist/assets/images/logo/logo-letter-9.png" alt="CIDRZ Logo" />
+        <h2><i class="material-icons">lock</i> Asset Management Login</h2>
+
+        <form id="loginForm" action="POST">
+            <div class="input-group">
+                <label for="username">Email</label>
+                <input type="text" id="username" placeholder="Enter your email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit">Sign In</button>
+            <div class="error-message" id="loginError">Login failed. Please check your credentials.</div>
+        </form>
+
+        <div class="footer-text">
+            &copy; 2025 CIDRZ Asset Management System
+        </div>
+    </div>
+
+    <script>
+        // ✅ Redirect if already logged in
+        if (localStorage.getItem('token') && localStorage.getItem('name')) {
+            window.location.href = 'landing.html';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const baseUrl = window.location.origin;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const overlay = document.getElementById('spinnerOverlay');
+            const loginButton = this.querySelector('button');
+            const errorDiv = document.getElementById('loginError');
+
+            // ✅ Simple validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(username)) {
+                errorDiv.textContent = 'Please enter a valid email address.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            if (password.length < 4) {
+                errorDiv.textContent = 'Password must be at least 4 characters.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            overlay.style.display = 'flex';
+            loginButton.disabled = true;
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${baseUrl}/api/Auth/Login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('name', data.name);
+                    window.location.href = 'landing.html';
+                } else {
+                    errorDiv.textContent = 'Invalid email or password.';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = 'Something went wrong. Please try again later.';
+                errorDiv.style.display = 'block';
+            } finally {
+                overlay.style.display = 'none';
+                loginButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

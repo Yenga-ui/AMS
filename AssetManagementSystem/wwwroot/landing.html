@@ -1,0 +1,752 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Asset Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1746A2;
+            --secondary-blue: #2E6BD0;
+            --light-blue: #E8F1FF;
+            --dark-blue: #0D2A6B;
+            --accent-orange: #FF6B35;
+            --text-dark: #1A1A1A;
+            --text-light: #666666;
+            --background: #F8FAFF;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            height: 42px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+            .nav-link:hover {
+                color: var(--primary-blue);
+            }
+
+            .nav-link.active {
+                color: var(--primary-blue);
+            }
+
+                .nav-link.active::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background-color: var(--primary-blue);
+                }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+            .user-info:hover {
+                background-color: var(--light-blue);
+            }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            right: 2rem;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 0.5rem 0;
+            width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+            .dropdown.show {
+                display: block;
+            }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+            .dropdown-item:hover {
+                background-color: var(--light-blue);
+            }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border);
+            margin: 0.25rem 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-hover);
+                border-color: var(--primary-blue);
+            }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background-color: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-blue);
+            font-size: 1.75rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-blue);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+            .action-btn:hover {
+                background: var(--light-blue);
+                border-color: var(--primary-blue);
+            }
+
+        /* Recent Activity */
+        .activity-list {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .activity-item:last-child {
+                border-bottom: none;
+            }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-details {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-blue);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+            .footer-link:hover {
+                opacity: 1;
+            }
+
+        .copyright {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .header-container {
+                padding: 0.75rem 1.5rem;
+            }
+
+            .nav-menu {
+                gap: 1.5rem;
+            }
+
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .stats-container {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .user-menu {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .dropdown {
+                right: 1rem;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .stats-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            main {
+                padding: 2rem 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 1.25rem;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="dist/assets/images/logo/logo-letter-9.png" alt="CIDRZ Logo" class="logo">
+                <span class="logo-text">Asset Management</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Assets</a>
+                <a href="#" class="nav-link">Reports</a>
+                <a href="#" class="nav-link">Help</a>
+            </nav>
+            <div class="user-menu">
+                <div class="user-info" id="userInfo">
+                    <div class="user-avatar" id="userAvatar">JD</div>
+                    <span class="user-name" id="userName">John Doe</span>
+                    <i class="material-icons">expand_more</i>
+                </div>
+                <div class="dropdown" id="userDropdown">
+                    <a href="#" class="dropdown-item">
+                        <i class="material-icons">person</i>
+                        <span>My Profile</span>
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <i class="material-icons">settings</i>
+                        <span>Account Settings</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item" id="logoutBtn">
+                        <i class="material-icons">logout</i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Asset Management System</h1>
+            <p class="hero-subtitle">Streamline asset tracking, maintenance, and reporting across your organization</p>
+            <div class="stats-container">
+                <div class="stat">
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">Total Assets</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">94%</div>
+                    <div class="stat-label">Asset Availability</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Pending Maintenance</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <h2 class="section-title">Quick Access</h2>
+        <div class="cards-grid">
+            <a href="all-assets.html" class="card">
+                <div class="card-icon">
+                    <i class="material-icons">inventory_2</i>
+                </div>
+                <h3 class="card-title">All Assets</h3>
+                <p class="card-description">View and manage all company assets in one centralized location</p>
+                <div class="card-footer">
+                    <span>View Assets</span>
+                    <i class="material-icons">arrow_forward</i>
+                </div>
+            </a>
+            <a href="index2.html" class="card">
+                <div class="card-icon">
+                    <i class="material-icons">store</i>
+                </div>
+                <h3 class="card-title">Warehouse</h3>
+                <p class="card-description">Manage warehouse inventory, stock levels, and item tracking</p>
+                <div class="card-footer">
+                    <span>Access Warehouse</span>
+                    <i class="material-icons">arrow_forward</i>
+                </div>
+            </a>
+            <a href="ict.html" class="card">
+                <div class="card-icon">
+                    <i class="material-icons">computer</i>
+                </div>
+                <h3 class="card-title">ICT Assets</h3>
+                <p class="card-description">Manage IT equipment, software licenses, and technology resources</p>
+                <div class="card-footer">
+                    <span>View ICT Assets</span>
+                    <i class="material-icons">arrow_forward</i>
+                </div>
+            </a>
+            <a href="users.html" class="card">
+                <div class="card-icon">
+                    <i class="material-icons">settings</i>
+                </div>
+                <h3 class="card-title">System Management</h3>
+                <p class="card-description">Configure users, roles, and system settings</p>
+                <div class="card-footer">
+                    <span>Manage System</span>
+                    <i class="material-icons">arrow_forward</i>
+                </div>
+            </a>
+        </div>
+
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-actions">
+            <a href="add-asset.html" class="action-btn">
+                <i class="material-icons">add</i>
+                <span>Add New Asset</span>
+            </a>
+            <a href="assigned-assets.html" class="action-btn">
+                <i class="material-icons">assignment_ind</i>
+                <span>View Assigned Assets</span>
+            </a>
+            <a href="maintenance.html" class="action-btn">
+                <i class="material-icons">build</i>
+                <span>Schedule Maintenance</span>
+            </a>
+            <a href="reports.html" class="action-btn">
+                <i class="material-icons">assessment</i>
+                <span>Generate Reports</span>
+            </a>
+        </div>
+
+        <h2 class="section-title">Recent Activity</h2>
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="material-icons">add_circle</i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">New Asset Added</div>
+                    <div class="activity-details">MacBook Pro 14" added to ICT inventory</div>
+                </div>
+                <div class="activity-time">2 hours ago</div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="material-icons">assignment_turned_in</i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Asset Assigned</div>
+                    <div class="activity-details">Projector assigned to Conference Room B</div>
+                </div>
+                <div class="activity-time">5 hours ago</div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="material-icons">build</i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Maintenance Completed</div>
+                    <div class="activity-details">Printer maintenance completed successfully</div>
+                </div>
+                <div class="activity-time">Yesterday</div>
+            </div>
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="material-icons">inventory</i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">Stock Updated</div>
+                    <div class="activity-details">Warehouse stock levels updated for Q3</div>
+                </div>
+                <div class="activity-time">2 days ago</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Contact</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Help Center</a>
+            </div>
+            <div class="copyright">
+                © 2025 Centre for Infectious Disease Research in Zambia. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Check login status
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("name");
+
+        if (!token || !name) {
+            window.location.href = "login.html"; // Redirect if not logged in
+        }
+
+        // Set the username and avatar
+        document.getElementById("userName").textContent = name;
+        document.getElementById("userAvatar").textContent = name.split(' ').map(n => n[0]).join('');
+
+        // Toggle dropdown visibility
+        document.getElementById("userInfo").addEventListener("click", function () {
+            document.getElementById("userDropdown").classList.toggle("show");
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function (e) {
+            if (!e.target.closest('.user-menu')) {
+                document.getElementById("userDropdown").classList.remove("show");
+            }
+        });
+
+        // Logout functionality
+        document.getElementById("logoutBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+            localStorage.removeItem("token");
+            localStorage.removeItem("name");
+            window.location.href = "login.html";
+        });
+    </script>
+</body>
+</html>

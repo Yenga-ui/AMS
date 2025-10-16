@@ -1,0 +1,428 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asset Management System</title>
+
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet" />
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .select2-container {
+            width: 100% !important;
+            margin-top: 0.5rem;
+        }
+
+        .select2-selection {
+            height: 3rem !important;
+            padding-top: 0.5rem;
+        }
+
+        .select2-selection__rendered {
+            line-height: 2rem !important;
+        }
+
+        .select2-selection__arrow {
+            top: 10px !important;
+        }
+
+        .card-panel {
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        h5 {
+            margin-top: 2rem;
+        }
+
+        .tabs .tab a {
+            color: #1976d2;
+        }
+
+            .tabs .tab a.active {
+                background-color: #1976d2;
+                color: white;
+            }
+
+        .tabs .indicator {
+            background-color: #1976d2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="blue darken-3">
+        <div class="nav-wrapper container">
+            <a href="#!" class="brand-logo left">
+                <img src="dist/assets/images/logo/logo-letter-9.png" alt="Company Logo" style="height: 45px; vertical-align: middle; margin-right: 10px;">
+                Asset Management System
+            </a>
+
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <ul class="tabs">
+                    <li class="tab col s4"><a class="active" href="#assign">Assign</a></li>
+                    <li class="tab col s4"><a href="#maintenance">Maintenance</a></li>
+                    <li class="tab col s4"><a href="#borrow">Borrow</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Assign Tab -->
+        <div id="assign" class="col s12">
+            <h5>Assign Asset</h5>
+            <form id="dispatchForm" class="card-panel z-depth-2">
+                <div class="row">
+                    <div class="input-field col s12 m4">
+                        <label for="serialDropdown" class="active">Serial Number</label>
+                        <select id="serialDropdown" name="serial" required></select>
+                    </div>
+                    <div class="input-field col s12 m4">
+                        <label for="employeeDropdown" class="active">Employee</label>
+                        <select id="employeeDropdown" name="employeeId" required></select>
+                    </div>
+                    <div class="input-field col s12 m4">
+                        <label for="dispatchLocation" class="active">Dispatch Location</label>
+                        <select id="dispatchLocation" name="locationId" required></select>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <label for="project" class="active">Project</label>
+                        <select id="project" name="project" required></select>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input id="comments" type="text" name="comment" required />
+                        <label for="comments">Comment</label>
+                    </div>
+                </div>
+                <div class="right-align">
+                    <button type="submit" class="btn green">Assign</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Maintenance Tab -->
+        <div id="maintenance" class="col s12">
+            <h5>Maintain Asset</h5>
+            <form id="maintainForm" class="card-panel z-depth-2">
+                <div class="row">
+                    <div class="input-field col s12 m4">
+                        <input id="ticket" name="ticket" required />
+                        <label for="ticket">Ticket No.</label>
+                    </div>
+                    <div class="input-field col s12 m4">
+                        <label for="serialDdown" class="active">Serial Number</label>
+                        <select id="serialDdown" name="serialDdown" required></select>
+                    </div>
+                    <div class="input-field col s12 m4">
+                        <label for="employeeDdown" class="active">Employee</label>
+                        <select id="employeeDdown" name="employee" required></select>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input id="diagnosis" name="diagnosis" required />
+                        <label for="diagnosis">Problem</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input type="date" id="completeDate" name="completeDate" required>
+                        <label for="completeDate" class="active">Completion Date</label>
+                    </div>
+                </div>
+                <div class="right-align">
+                    <button type="submit" class="btn green">Save</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Borrow Tab -->
+        <div id="borrow" class="col s12">
+            <h5>Borrow Asset</h5>
+            <form id="borrowForm" class="card-panel z-depth-2">
+                <div class="row">
+                    <div class="input-field col s12 m6">
+                        <input type="date" id="borrowDate" name="borrowDate" required>
+                        <label for="borrowDate" class="active">Borrow Date</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <input type="date" id="returnDate" name="returnDate" required>
+                        <label for="returnDate" class="active">Return Date</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <label for="assetDdown" class="active">Asset</label>
+                        <select id="assetDdown" name="asset" required></select>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <label for="employeedown" class="active">Employee</label>
+                        <select id="employeedown" name="employeedown" required></select>
+                    </div>
+                </div>
+                <div class="right-align">
+                    <button type="submit" class="btn blue">Borrow Asset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("name");
+
+        if (!token || !name) {
+            window.location.href = "login.html"; // Redirect if not logged in
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            M.Tabs.init(document.querySelectorAll('.tabs'));
+
+            $(document).ready(function () {
+                ['#poDropdown', '#category', '#project', '#location', '#condition', '#currency', '#serialDropdown', '#employeeDropdown', '#dispatchLocation', '#employeeDdown', '#serialDdown', '#assetDdown', '#employeedown'].forEach(id => {
+                    $(id).select2({
+                        placeholder: "Select...",
+                        allowClear: true,
+                        width: 'resolve'
+                    });
+                });
+
+
+            });
+        });
+
+        function populateDropdown(selectId, apiUrl, textKey, valueKey = 'id') {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const select = $("#" + selectId);
+                    select.empty().append('<option></option>');
+                    data.forEach(item => {
+                        const option = new Option(item[textKey], item[valueKey], false, false);
+                        select.append(option);
+                    });
+                    select.trigger('change');
+                })
+                .catch(error => console.error(`Error loading ${selectId}:`, error));
+        }
+
+        // Populate dropdowns
+        populateDropdown('category', '/api/categories', 'category');
+        populateDropdown('project', '/api/projects', 'project');
+        populateDropdown('location', '/api/locations', 'location');
+        populateDropdown('condition', '/api/conditions', 'condition');
+        populateDropdown('currency', '/api/currencies', 'currency');
+        populateDropdown('serialDropdown', '/api/Stock/warehouseserials', 'makeModel');
+        populateDropdown('serialDdown', '/api/Stock/warehouseserials', 'makeModel');
+        populateDropdown('assetDdown', '/api/Stock/warehouseserials', 'makeModel');
+        populateDropdown('employeeDropdown', '/api/Employee/employees', 'fullname');
+        populateDropdown('employeeDdown', '/api/Employee/employees', 'fullname');
+        populateDropdown('employeedown', '/api/Employee/employees', 'fullname');// adjust `name` to your actual field
+        populateDropdown('dispatchLocation', '/api/locations', 'location');
+
+    </script>
+
+    <!--Post Create Asset-->
+    <script>
+        $(document).ready(function () {
+            $('#assetForm').submit(function (e) {
+                e.preventDefault();
+
+                const formData = {
+                    orderNumber: $('#orderNumber').val(),
+                    poDropdown: $('#poDropdown').val(),
+                    category: $('#category').val(),
+                    project: $('#project').val(),
+                    location: $('#location').val(),
+                    make: $('#make').val(),
+                    model: $('#model').val(),
+                    condition: $('#condition').val(),
+                    currency: $('#currency').val(),
+                    price: $('#price').val(),
+                    purchaseDate: $('#purchaseDate').val(),
+                    dateReceived: $('#dateReceived').val(),
+                    comment: $('#comment').val()
+                };
+
+                const serials = $('input[name="serial[]"]').map(function () {
+                    return $(this).val();
+                }).get();
+
+                // Prepare all assets as an array of objects
+                const assets = serials.map(serial => {
+                    return { ...formData, serialNumber: serial };
+                });
+
+                // Send the batch request
+                $.ajax({
+                    url: '/api/Stock/CreateBatch',  // Endpoint for batch insertion
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(assets),  // Sending all assets in a batch
+                    success: function (response) {
+                        console.log('Batch assets created:', response);
+                        // Optional: show success message to user
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error creating assets:', error);
+                        // Optional: show error message to user
+                    }
+                });
+            });
+
+            // Optional: add-serial button logic
+            $('.add-serial').on('click', function () {
+                $('#serialContainer').append(`
+                                                                    <div class="row serial-row">
+                                                                        <div class="input-field col s10">
+                                                                            <input name="serial[]" type="text" required placeholder="Serial Number">
+                                                                        </div>
+                                                                        <div class="col s2">
+                                                                            <button class="btn red remove-serial" type="button"><i class="material-icons">remove</i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                `);
+            });
+
+            // Optional: remove-serial button logic
+            $('#serialContainer').on('click', '.remove-serial', function () {
+                $(this).closest('.serial-row').remove();
+            });
+        });
+    </script>
+
+
+    <!--Post Maintainance-->
+
+    <script>
+        document.getElementById('maintainForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent normal form submission
+
+            const form = e.target;
+
+            const data = {
+                Ticket: form.ticket.value,
+                StockId: form.serialDdown.value,
+                EmployeeId: form.employeeDdown.value,
+                Diagnosis: form.diagnosis.value,
+                ReturnDate: form.completeDate.value
+            };
+
+            fetch('api/Stock/maintain', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json(); // or response.text() if API returns plain text
+                })
+                .then(result => {
+                    console.log('Success:', result);
+                    // You can display a success message or reset the form here
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Display error message to the user
+                });
+        });
+    </script>
+
+
+    <!--Post Assign-->
+    <script>
+        document.getElementById('dispatchForm').addEventListener('submit', async function (e) {
+            e.preventDefault(); // prevent the default form submission
+
+            const serial = document.getElementById('serialDropdown').value;
+            const employeeId = document.getElementById('employeeDropdown').value;
+            const locationId = document.getElementById('dispatchLocation').value;
+            const project = document.getElementById('project').value;
+            const comment = document.getElementById('comment').value;
+            const payload = {
+                StockId: serial,
+                EmployeeId: employeeId,
+                LocationId: locationId,
+                ProjectId: project,
+                Comments: comment
+            };
+
+            try {
+                const response = await fetch('api/Stock/dispatch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('Asset dispatched successfully!');
+                    // Optionally reset the form or update UI
+                    document.getElementById('dispatchForm').reset();
+                } else {
+                    const errorText = await response.text();
+                    alert('Dispatch failed: ' + errorText);
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            }
+        });
+    </script>
+
+    <!--Post Borrow-->
+    <script>
+        document.getElementById('borrowForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submit behavior
+
+            const form = e.target;
+
+            const data = {
+                DateFrom: form.borrowDate.value,
+                DateTo: form.returnDate.value,
+                StockId: form.assetDdown.value,
+                EmployeeId: form.employeeDdown.value
+            };
+
+            fetch('api/Stock/borrow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('Borrow successful:', result);
+                    // Optional: Show success message, reset form, or navigate
+                    M.toast({ html: 'Asset borrowed successfully!', classes: 'green' }); // Materialize toast
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    M.toast({ html: 'Failed to borrow asset', classes: 'red' });
+                });
+        });
+    </script>
+
+</body>
+</html>

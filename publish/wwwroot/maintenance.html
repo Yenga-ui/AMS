@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Asset Maintenance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap + DataTables + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        #sidebar {
+            height: 100vh;
+            background-color: #343a40;
+        }
+
+            #sidebar .nav-link {
+                color: #ffffff;
+            }
+
+                #sidebar .nav-link.active, #sidebar .nav-link:hover {
+                    background-color: #495057;
+                }
+
+        #topbar {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection {
+            height: calc(2.25rem + 2px);
+        }
+    </style>
+</head>
+<body>
+    <header id="topbar" class="py-2 px-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 text-white">Asset Maintenance</h5>
+        <span><i class="bi bi-person-circle"></i> Logged in as <strong>admin@example.com</strong></span>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-2 d-md-block bg-dark sidebar shadow-lg p-3">
+                <a href="#" class="d-flex align-items-center mb-3 text-white text-decoration-none">
+                    <i class="bi bi-tools fs-3 me-2"></i><span class="fs-4 fw-bold">Maintenance</span>
+                </a>
+                <hr class="text-secondary" />
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-plus-square me-2"></i>Create Asset</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-pencil-square me-2"></i>Maintain Assets</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-people-fill me-2"></i>View Assignments</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-tools me-2"></i>Schedule Maintenance</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link text-white"><i class="bi bi-list-check me-2"></i>Maintenance History</a></li>
+                </ul>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-10 ms-sm-auto px-md-4 pt-4">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Schedule Maintenance</h5>
+                    </div>
+                    <div class="card-body">
+                        <table id="maintenanceTable" class="table table-striped table-bordered table-hover" style="width:100%;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Action</th>
+                                    <th>ID</th>
+                                    <th>Serial No</th>
+                                    <th>Make</th>
+                                    <th>Model</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Maintenance Modal -->
+    <div class="modal fade" id="maintenanceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="maintenanceForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule Maintenance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="maintStockId">
+                    
+                    <div class="mb-3">
+                        <label for="ticketNumber" class="form-label">Ticket Number</label>
+                        <input type="text" id="ticketNumber" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="expectedCompletionDate" class="form-label">Expected Completion Date</label>
+                        <input type="date" id="expectedCompletionDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const table = $('#maintenanceTable').DataTable();
+
+            async function loadDropdown(id, endpoint, valueField, textField, modalId) {
+                const data = await fetch(endpoint).then(res => res.json());
+                const select = $(`#${id}`);
+                select.empty().append('<option disabled selected>Choose...</option>');
+                data.forEach(item => select.append(new Option(item[textField], item[valueField])));
+                select.select2({ theme: 'bootstrap-5', dropdownParent: $(`#${modalId}`), placeholder: 'Choose...', allowClear: true, width: '100%', minimumResultsForSearch: 0 });
+            }
+
+            function loadMaintenance() {
+                $.get('/api/stock/AssignedOrBorrowed', data => {
+                    table.clear();
+                    data.forEach(item => {
+                        const actionButton = `
+                                <button class="btn btn-sm btn-outline-warning maintenance-btn" data-id="${item.id}" title="Maintenance">
+                                    <i class="bi bi-tools"></i>
+                                </button>
+                            `;
+                        table.row.add([
+                            actionButton,
+                            item.id,
+                            item.serialNo,
+                            item.make,
+                            item.model
+                        ]);
+                    });
+                    table.draw();
+                });
+            }
+
+            // Initial load
+            loadMaintenance();
+            loadDropdown('maintStockSelect', '/api/stock/assigned-or-borrowed', 'id', 'serialNo', 'maintenanceModal');
+
+            // Schedule Maintenance
+            $('#maintenanceTable').on('click', '.maintenance-btn', function () {
+                const id = $(this).data('id');
+                $('#maintStockId').val(id);
+                $('#ticketNumber').val('');
+                $('#expectedCompletionDate').val('');
+                bootstrap.Modal.getOrCreateInstance('#maintenanceModal').show();
+            });
+
+            $('#maintenanceForm').submit(e => {
+                e.preventDefault();
+                const dto = {
+                    StockId: +$('#maintStockId').val(),
+                    TicketNumber: $('#ticketNumber').val(),
+                    ExpectedCompletionDate: $('#expectedCompletionDate').val()
+                };
+                $.ajax({
+                    url: '/api/stock/maintenance',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(dto),
+                    success: () => {
+                        bootstrap.Modal.getOrCreateInstance('#maintenanceModal').hide();
+                        loadMaintenance();
+                    },
+                    error: (xhr, _, err) => console.error('Maintenance failed', err)
+                });
+            });
+        });
+    </script>
+</body>
+</html>

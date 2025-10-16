@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Status Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f8;
+            padding: 20px;
+        }
+
+        .card-panel {
+            padding: 25px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .dataTables_wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100% !important;
+        }
+
+        h5 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="blue darken-3">
+        <div class="nav-wrapper container">
+            <a href="#!" class="brand-logo left">
+                <img src="dist/assets/images/logo/logo-letter-9.png" alt="Company Logo" style="height: 45px; vertical-align: middle; margin-right: 10px;">
+                Asset Management System
+            </a>
+
+        </div>
+    </nav>
+    <div class="container">
+       
+
+        <div class="row">
+            <div class="col s12">
+                <ul class="tabs">
+                    <li class="tab col s4"><a href="#assigned" class="active">Assigned</a></li>
+                    <li class="tab col s4"><a href="#borrowed">Borrowed</a></li>
+                    <li class="tab col s4"><a href="#maintenance">In Maintenance</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Assigned Tab -->
+        <div id="assigned" class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                    <h5 class="blue-text">Assigned Items</h5>
+                    <div style="overflow-x:auto;">
+                        <table id="assignedTable" class="striped responsive-table highlight">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Asset Name</th>
+                                    <th>Category</th>
+                                    <th>Assigned To</th>
+                                    <th>Location</th>
+                                    <th>Date Assigned</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Borrowed Tab -->
+        <div id="borrowed" class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                    <h5 class="orange-text">Borrowed Items</h5>
+                    <div style="overflow-x:auto;">
+                        <table id="borrowedTable" class="striped responsive-table highlight">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Asset Name</th>
+                                    <th>Category</th>
+                                    <th>Borrowed By</th>
+                                    <th>Return Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Maintenance Tab -->
+        <div id="maintenance" class="row">
+            <div class="col s12">
+                <div class="card-panel">
+                    <h5 class="red-text">Items in Maintenance</h5>
+                    <div style="overflow-x:auto;">
+                        <table id="maintenanceTable" class="striped responsive-table highlight">
+                            <thead>
+                                <tr>
+                                    <th>Serial No</th>
+                                    <th>Asset Name</th>
+                                    <th>Category</th>
+                                    <th>Issue</th>
+                                    <th>Reported By</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- jQuery & Materialize JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("name");
+
+        if (!token || !name) {
+            window.location.href = "login.html"; // Redirect if not logged in
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.tabs');
+            var instances = M.Tabs.init(elems);
+        });
+
+        $(document).ready(function () {
+            $('#assignedTable').DataTable();
+            $('#borrowedTable').DataTable();
+            $('#maintenanceTable').DataTable();
+        });
+    </script>
+</body>
+</html>

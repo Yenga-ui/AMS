@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login - Asset Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --bg-color: #f4f7fa;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+            .login-box img {
+                height: 60px;
+                margin-bottom: 1rem;
+            }
+
+            .login-box h2 {
+                margin-bottom: 1rem;
+                color: var(--primary-color);
+            }
+
+        .input-group {
+            text-align: left;
+            margin: 1rem 0;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: border 0.2s;
+        }
+
+            input:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+                outline: none;
+            }
+
+        button {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+            button:hover {
+                background-color: #1565c0;
+            }
+
+        .footer-text {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .spinner-overlay {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .login-box {
+                margin: 1rem;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="spinner-overlay" id="spinnerOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="login-box">
+        <img src="dist/assets/images/logo/logo-letter-9.png" alt="CIDRZ Logo">
+        <h2><i class="material-icons">lock</i> Login</h2>
+
+        <form id="loginForm" action="POST">
+            <div class="input-group">
+                <label for="username">Email</label>
+                <input type="text" id="username" placeholder="Enter your email or username" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit">Login</button>
+            <div class="error-message" id="loginError">Login failed. Please check your credentials.</div>
+        </form>
+
+        <div class="footer-text">
+            &copy; 2025 CIDRZ Asset Management System
+        </div>
+    </div>
+
+    <script>
+        // ✅ Redirect if already logged in
+        if (localStorage.getItem('token') && localStorage.getItem('name')) {
+            window.location.href = 'landing.html';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const baseUrl = window.location.origin;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            const overlay = document.getElementById('spinnerOverlay');
+            const loginButton = this.querySelector('button');
+            const errorDiv = document.getElementById('loginError');
+
+            // ✅ Simple form validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(username)) {
+                errorDiv.textContent = 'Please enter a valid email address.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            if (password.length < 4) {
+                errorDiv.textContent = 'Password must be at least 4 characters.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            overlay.style.display = 'flex';
+            loginButton.disabled = true;
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${baseUrl}/api/Auth/Login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // ✅ Store required info
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('name', data.name);
+
+                    window.location.href = 'landing.html';
+                } else {
+                    errorDiv.textContent = 'Login failed. Please check your credentials.';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = 'Something went wrong. Please try again later.';
+                errorDiv.style.display = 'block';
+            } finally {
+                overlay.style.display = 'none';
+                loginButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

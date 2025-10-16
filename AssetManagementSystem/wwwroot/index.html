@@ -1,0 +1,1186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asset Management System</title>
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --primary-light: #e8f0fe;
+            --secondary: #5f6368;
+            --success: #34a853;
+            --warning: #f9ab00;
+            --danger: #ea4335;
+            --light: #f8f9fa;
+            --dark: #202124;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            height: 64px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 36px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 24px 0;
+            transition: var(--transition);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: var(--secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+            .nav-item:hover {
+                background-color: var(--primary-light);
+                color: var(--primary);
+            }
+
+            .nav-item.active {
+                background-color: var(--primary-light);
+                color: var(--primary);
+                border-left-color: var(--primary);
+                font-weight: 600;
+            }
+
+            .nav-item i {
+                margin-right: 12px;
+                font-size: 20px;
+            }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--dark);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 24px;
+            transition: var(--transition);
+        }
+
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+            .card-icon.assigned {
+                background-color: var(--primary);
+            }
+
+            .card-icon.borrowed {
+                background-color: var(--warning);
+            }
+
+            .card-icon.maintenance {
+                background-color: var(--danger);
+            }
+
+            .card-icon.summary {
+                background-color: var(--success);
+            }
+
+        .status-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .status-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .status-item:last-child {
+                border-bottom: none;
+            }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-assigned {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .badge-borrowed {
+            background: #fff8e1;
+            color: var(--warning);
+        }
+
+        .badge-maintenance {
+            background: #ffebee;
+            color: var(--danger);
+        }
+
+        /* Status Summary Styles */
+        .status-summary {
+            padding: 8px 0;
+        }
+
+            .status-summary .status-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+                .status-summary .status-item:last-child {
+                    border-bottom: none;
+                }
+
+            .status-summary .status-value {
+                font-weight: bold;
+            }
+
+                .status-summary .status-value.available {
+                    color: var(--success);
+                }
+
+                .status-summary .status-value.assigned {
+                    color: var(--primary);
+                }
+
+                .status-summary .status-value.borrowed {
+                    color: var(--warning);
+                }
+
+                .status-summary .status-value.maintenance {
+                    color: var(--danger);
+                }
+
+        /* Tabs */
+        .tabs-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--secondary);
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+            .tab:hover {
+                color: var(--primary);
+                background: rgba(26, 115, 232, 0.05);
+            }
+
+            .tab.active {
+                color: var(--primary);
+                border-bottom-color: var(--primary);
+                background: white;
+            }
+
+        .tab-content {
+            display: none;
+            padding: 24px;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 24px;
+        }
+
+        .form-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--dark);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+            }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+            }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background-color: #2e8b47;
+            }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background-color: #e09c00;
+            }
+
+        /* Select2 Customization */
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-selection {
+            height: 48px !important;
+            padding: 12px 16px;
+            border: 1px solid #ddd !important;
+            border-radius: var(--border-radius) !important;
+        }
+
+        .select2-selection__rendered {
+            line-height: 24px !important;
+        }
+
+        .select2-selection__arrow {
+            top: 12px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 16px 0;
+            }
+
+            .nav-item {
+                padding: 12px 16px;
+            }
+
+            .content {
+                padding: 16px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs-header {
+                flex-direction: column;
+            }
+
+            .tab {
+                padding: 12px 16px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="dist/assets/images/logo/logo-letter-9.png" alt="Company Logo" class="logo">
+                <span class="logo-text">Asset Management System</span>
+            </div>
+            <div class="user-info">
+                <span id="userName">John Doe</span>
+                <div class="user-avatar">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="index.html" class="nav-item active">
+                <i class="material-icons">dashboard</i> <span>Dashboard</span>
+            </a> <a href="all-assets.html" class="nav-item">
+                <i class="material-icons">inventory_2</i> <span>All Assets</span>
+            </a> <a href="assigned-assets.html" class="nav-item">
+                <i class="material-icons">assignment_ind</i> <span>Assigned Assets</span>
+            </a>
+            <a href="borrowed-assets.html" class="nav-item">
+                <i class="material-icons">book</i> <span>Borrowed Assets</span>
+            </a>
+            <a href="maintenance.html" class="nav-item">
+                <i class="material-icons">build</i> <span>Maintenance</span>
+            </a>
+            <a href="employees.html" class="nav-item">
+                <i class="material-icons">people</i>
+                <span>Employees</span>
+            </a> <a href="locations.html" class="nav-item">
+                <i class="material-icons">location_on</i> <span>Locations</span>
+            </a> <a href="reports.html" class="nav-item">
+                <i class="material-icons">assessment</i> <span>Reports</span>
+            </a>
+            <a href="settings.html" class="nav-item"> <i class="material-icons">settings</i> <span>Settings</span> </a>
+        </aside>
+        <!-- Content Area -->
+        <main class="content">
+            <h1 class="page-title">Asset Management Dashboard</h1>
+
+            <!-- Dashboard Overview -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recently Assigned Assets</h3>
+                        <div class="card-icon assigned">
+                            <i class="material-icons">assignment_ind</i>
+                        </div>
+                    </div>
+                    <div class="status-list" id="assignedAssetsList">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Currently Borrowed Assets</h3>
+                        <div class="card-icon borrowed">
+                            <i class="material-icons">book</i>
+                        </div>
+                    </div>
+                    <div class="status-list" id="borrowedAssetsList">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Active Maintenance Requests</h3>
+                        <div class="card-icon maintenance">
+                            <i class="material-icons">build</i>
+                        </div>
+                    </div>
+                    <div class="status-list" id="maintenanceRequestsList">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Asset Status Summary</h3>
+                        <div class="card-icon summary">
+                            <i class="material-icons">assessment</i>
+                        </div>
+                    </div>
+                    <div id="assetStatusSummary">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Container -->
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <div class="tab active" data-tab="assign">Assign Asset</div>
+                    <div class="tab" data-tab="borrow">Borrow Asset</div>
+                    <div class="tab" data-tab="maintenance">Maintenance</div>
+                    <div class="tab" data-tab="return">Return Asset</div>
+                </div>
+
+                <!-- Assign Tab -->
+                <div id="assign" class="tab-content active">
+                    <div class="form-container">
+                        <h3 class="form-title">Assign Asset to Employee</h3>
+                        <form id="dispatchForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="serialDropdown" class="form-label">Select Asset</label>
+                                    <select id="serialDropdown" name="serial" class="form-control" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="employeeDropdown" class="form-label">Select Employee</label>
+                                    <select id="employeeDropdown" name="employeeId" class="form-control" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dispatchLocation" class="form-label">Dispatch Location</label>
+                                    <select id="dispatchLocation" name="locationId" class="form-control" required></select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="project" class="form-label">Project</label>
+                                    <select id="project" name="project" class="form-control" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="comments" class="form-label">Comments</label>
+                                    <input id="comments" type="text" name="comment" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="material-icons">assignment_turned_in</i>Assign Asset
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Borrow Tab -->
+                <div id="borrow" class="tab-content">
+                    <div class="form-container">
+                        <h3 class="form-title">Borrow Asset to Employee</h3>
+                        <form id="borrowForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="borrowDate" class="form-label">Borrow Date</label>
+                                    <input type="date" id="borrowDate" name="borrowDate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="returnDate" class="form-label">Return Date</label>
+                                    <input type="date" id="returnDate" name="returnDate" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="assetDdown" class="form-label">Select Asset</label>
+                                    <select id="assetDdown" name="asset" class="form-control" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="employeedown" class="form-label">Select Employee</label>
+                                    <select id="employeedown" name="employeedown" class="form-control" required></select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="material-icons">book</i>Borrow Asset
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Maintenance Tab -->
+                <div id="maintenance" class="tab-content">
+                    <div class="form-container">
+                        <h3 class="form-title">Submit Asset for Maintenance</h3>
+                        <form id="maintainForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="ticket" class="form-label">Ticket Number</label>
+                                    <input id="ticket" name="ticket" class="form-control" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="serialDdown" class="form-label">Select Asset</label>
+                                    <select id="serialDdown" name="serialDdown" class="form-control" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="employeeDdown" class="form-label">Reported By</label>
+                                    <select id="employeeDdown" name="employee" class="form-control" required></select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="diagnosis" class="form-label">Problem Description</label>
+                                    <input id="diagnosis" name="diagnosis" class="form-control" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="completeDate" class="form-label">Expected Completion Date</label>
+                                    <input type="date" id="completeDate" name="completeDate" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="material-icons">build</i>Submit for Maintenance
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Return Tab -->
+                <div id="return" class="tab-content">
+                    <div class="form-container">
+                        <h3 class="form-title">Return Asset</h3>
+                        <form id="returnForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="returnAssetDropdown" class="form-label">Select Asset to Return</label>
+                                    <select id="returnAssetDropdown" name="assetId" class="form-control" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="returnEmployeeDropdown" class="form-label">Returned By</label>
+                                    <select id="returnEmployeeDropdown" name="employeeId" class="form-control" required></select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="actualReturnDate" class="form-label">Actual Return Date</label>
+                                    <input type="date" id="actualReturnDate" name="returnDate" class="form-control" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="returnComment" class="form-label">Return Notes</label>
+                                    <input type="text" id="returnComment" name="comment" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="material-icons">check_circle</i>Return Asset
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("name");
+
+        if (!token || !name) {
+            window.location.href = "login.html";
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set user name
+            document.getElementById('userName').textContent = name;
+
+            // Initialize components
+            initializeTabs();
+            initializeSelect2();
+
+            // Load initial data
+            loadDashboardData();
+            loadFormData();
+
+            // Setup form event listeners
+            setupFormHandlers();
+        });
+
+        function initializeTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        function initializeSelect2() {
+            // Initialize all Select2 dropdowns
+            [
+                '#serialDropdown', '#employeeDropdown', '#dispatchLocation', '#project',
+                '#assetDdown', '#employeedown', '#serialDdown', '#employeeDdown',
+                '#returnAssetDropdown', '#returnEmployeeDropdown'
+            ].forEach(id => {
+                $(id).select2({
+                    placeholder: "Select...",
+                    allowClear: true,
+                    width: '100%'
+                });
+            });
+        }
+
+        // ========== DASHBOARD FUNCTIONS ==========
+        async function loadDashboardData() {
+            try {
+                // Load assigned assets
+                const assignedResponse = await fetch('/api/Asset/assigned?pageNumber=1&pageSize=5');
+                if (assignedResponse.ok) {
+                    const assignedData = await assignedResponse.json();
+                    updateAssignedAssetsList(assignedData.data);
+                }
+
+                // Load borrowed assets
+                const borrowedResponse = await fetch('/api/Asset/borrowed?pageNumber=1&pageSize=5');
+                if (borrowedResponse.ok) {
+                    const borrowedData = await borrowedResponse.json();
+                    updateBorrowedAssetsList(borrowedData.data);
+                }
+
+                // Load maintenance requests
+                const maintenanceResponse = await fetch('/api/Asset/maintenance?pageNumber=1&pageSize=5');
+                if (maintenanceResponse.ok) {
+                    const maintenanceData = await maintenanceResponse.json();
+                    updateMaintenanceRequestsList(maintenanceData.data);
+                }
+
+                // Load asset status summary
+                const statusResponse = await fetch('/api/Asset/status');
+                if (statusResponse.ok) {
+                    const statusData = await statusResponse.json();
+                    updateAssetStatusSummary(statusData);
+                }
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        function updateAssignedAssetsList(assets) {
+            const container = document.getElementById('assignedAssetsList');
+            if (assets.length === 0) {
+                container.innerHTML = '<div class="center-align" style="padding: 2rem; color: #666;">No assigned assets</div>';
+                return;
+            }
+
+            container.innerHTML = assets.slice(0, 5).map(asset => `
+                            <div class="status-item">
+                                <div>
+                                    <strong>${asset.asset}</strong><br>
+                                    <small>To: ${asset.employee}</small>
+                                </div>
+                                <span class="badge badge-assigned">Assigned</span>
+                            </div>
+                        `).join('');
+        }
+
+        function updateBorrowedAssetsList(assets) {
+            const container = document.getElementById('borrowedAssetsList');
+            if (assets.length === 0) {
+                container.innerHTML = '<div class="center-align" style="padding: 2rem; color: #666;">No borrowed assets</div>';
+                return;
+            }
+
+            container.innerHTML = assets.slice(0, 5).map(asset => `
+                            <div class="status-item">
+                                <div>
+                                    <strong>${asset.asset}</strong><br>
+                                    <small>By: ${asset.employee}</small>
+                                </div>
+                                <span class="badge badge-borrowed">Borrowed</span>
+                            </div>
+                        `).join('');
+        }
+
+        function updateMaintenanceRequestsList(requests) {
+            const container = document.getElementById('maintenanceRequestsList');
+            if (requests.length === 0) {
+                container.innerHTML = '<div class="center-align" style="padding: 2rem; color: #666;">No maintenance requests</div>';
+                return;
+            }
+
+            container.innerHTML = requests.slice(0, 5).map(request => `
+                            <div class="status-item">
+                                <div>
+                                    <strong>${request.asset}</strong><br>
+                                    <small>Ticket: ${request.ticket}</small>
+                                </div>
+                                <span class="badge badge-maintenance">Maintenance</span>
+                            </div>
+                        `).join('');
+        }
+
+        // ========== FORM DATA FUNCTIONS ==========
+        async function loadFormData() {
+            try {
+                // Load available assets from AssetController
+                const assetsResponse = await fetch('/api/Asset/available');
+                if (assetsResponse.ok) {
+                    const assets = await assetsResponse.json();
+                    populateAssetsDropdowns(assets);
+                }
+
+                // Load employees from AssetController
+                const employeesResponse = await fetch('/api/Employee/employees');
+                if (employeesResponse.ok) {
+                    const employees = await employeesResponse.json();
+                    populateEmployeesDropdowns(employees);
+                }
+
+                // Load locations and projects
+                await populateDropdown('dispatchLocation', '/api/locations', 'location');
+                await populateDropdown('project', '/api/projects', 'project');
+
+            } catch (error) {
+                console.error('Error loading form data:', error);
+                showToast('Failed to load form data: ' + error, 'error');
+            }
+        }
+
+        function populateAssetsDropdowns(assets) {
+            const dropdowns = [
+                'serialDropdown', 'assetDdown', 'serialDdown', 'returnAssetDropdown'
+            ];
+
+            dropdowns.forEach(dropdownId => {
+                const dropdown = $(`#${dropdownId}`);
+                dropdown.empty().append('<option></option>');
+                assets.forEach(asset => {
+                    dropdown.append(new Option(asset.makeModel, asset.id, false, false));
+                });
+                dropdown.trigger('change');
+            });
+        }
+
+        function populateEmployeesDropdowns(employees) {
+            const dropdowns = [
+                'employeeDropdown', 'employeedown', 'employeeDdown', 'returnEmployeeDropdown'
+            ];
+
+            dropdowns.forEach(dropdownId => {
+                const dropdown = $(`#${dropdownId}`);
+                dropdown.empty().append('<option></option>');
+                employees.forEach(employee => {
+                    dropdown.append(new Option(employee.fullname, employee.id, false, false));
+                });
+                dropdown.trigger('change');
+            });
+        }
+
+        // ========== FORM HANDLER FUNCTIONS ==========
+        function setupFormHandlers() {
+            // Assign form
+            document.getElementById('dispatchForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                await assignAsset();
+            });
+
+            // Borrow form
+            document.getElementById('borrowForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                await borrowAsset();
+            });
+
+            // Maintenance form
+            document.getElementById('maintainForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                await submitMaintenance();
+            });
+
+            // Return form
+            document.getElementById('returnForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                await returnAsset();
+            });
+        }
+
+        async function assignAsset() {
+            const formData = {
+                StockId: document.getElementById('serialDropdown').value,
+                EmployeeId: document.getElementById('employeeDropdown').value,
+                LocationId: document.getElementById('dispatchLocation').value,
+                ProjectId: document.getElementById('project').value,
+                Comments: document.getElementById('comments').value
+            };
+
+            try {
+                const response = await fetch('/api/Asset/assign', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showToast(result.message, 'success');
+                    document.getElementById('dispatchForm').reset();
+                    loadDashboardData(); // Refresh dashboard
+                } else {
+                    const error = await response.text();
+                    throw new Error(error);
+                }
+            } catch (error) {
+                console.error('Error assigning asset:', error);
+                showToast('Failed to assign asset: ' + error.message, 'error');
+            }
+        }
+
+        async function borrowAsset() {
+            const formData = {
+                StockId: document.getElementById('assetDdown').value,
+                EmployeeId: document.getElementById('employeedown').value,
+                DateFrom: document.getElementById('borrowDate').value,
+                DateTo: document.getElementById('returnDate').value
+            };
+
+            try {
+                const response = await fetch('/api/Asset/borrow', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showToast(result.message, 'success');
+                    document.getElementById('borrowForm').reset();
+                    loadDashboardData(); // Refresh dashboard
+                } else {
+                    const error = await response.text();
+                    throw new Error(error);
+                }
+            } catch (error) {
+                console.error('Error borrowing asset:', error);
+                showToast('Failed to borrow asset: ' + error.message, 'error');
+            }
+        }
+
+        async function submitMaintenance() {
+            const formData = {
+                Ticket: document.getElementById('ticket').value,
+                StockId: document.getElementById('serialDdown').value,
+                EmployeeId: document.getElementById('employeeDdown').value,
+                Diagnosis: document.getElementById('diagnosis').value,
+                ReturnDate: document.getElementById('completeDate').value
+            };
+
+            try {
+                const response = await fetch('/api/Asset/maintain', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showToast(result.message, 'success');
+                    document.getElementById('maintainForm').reset();
+                    loadDashboardData(); // Refresh dashboard
+                } else {
+                    const error = await response.text();
+                    throw new Error(error);
+                }
+            } catch (error) {
+                console.error('Error submitting maintenance:', error);
+                showToast('Failed to submit maintenance request: ' + error.message, 'error');
+            }
+        }
+
+        async function returnAsset() {
+            const formData = {
+                StockId: document.getElementById('returnAssetDropdown').value,
+                Comments: document.getElementById('returnComment').value
+            };
+
+            try {
+                const response = await fetch('/api/Asset/return', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showToast(result.message, 'success');
+                    document.getElementById('returnForm').reset();
+                    loadDashboardData(); // Refresh dashboard
+                } else {
+                    const error = await response.text();
+                    throw new Error(error);
+                }
+            } catch (error) {
+                console.error('Error returning asset:', error);
+                showToast('Failed to return asset: ' + error.message, 'error');
+            }
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        function updateAssetStatusSummary(statusData) {
+            const statusElement = document.getElementById('assetStatusSummary');
+            if (statusElement) {
+                statusElement.innerHTML = `
+                                <div class="status-summary">
+                                    <div class="status-item">
+                                        <span class="status-label">Total Assets:</span>
+                                        <span class="status-value">${statusData.totalAssets}</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Available:</span>
+                                        <span class="status-value available">${statusData.availableAssets}</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Assigned:</span>
+                                        <span class="status-value assigned">${statusData.assignedAssets}</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Borrowed:</span>
+                                        <span class="status-value borrowed">${statusData.borrowedAssets}</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Maintenance:</span>
+                                        <span class="status-value maintenance">${statusData.maintenanceAssets}</span>
+                                    </div>
+                                </div>
+                            `;
+            }
+        }
+
+        async function populateDropdown(selectId, apiUrl, textKey, valueKey = 'id') {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Failed to fetch data');
+
+                const data = await response.json();
+                const select = $(`#${selectId}`);
+                select.empty().append('<option></option>');
+
+                data.forEach(item => {
+                    const option = new Option(item[textKey], item[valueKey], false, false);
+                    select.append(option);
+                });
+                select.trigger('change');
+            } catch (error) {
+                console.error(`Error loading ${selectId}:`, error);
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            // Create a simple toast notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        color: white;
+                        font-weight: 500;
+                        z-index: 1000;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                        transition: all 0.3s ease;
+                    `;
+
+            if (type === 'success') {
+                toast.style.backgroundColor = 'var(--success)';
+            } else if (type === 'error') {
+                toast.style.backgroundColor = 'var(--danger)';
+            } else if (type === 'warning') {
+                toast.style.backgroundColor = 'var(--warning)';
+            } else {
+                toast.style.backgroundColor = 'var(--primary)';
+            }
+
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
