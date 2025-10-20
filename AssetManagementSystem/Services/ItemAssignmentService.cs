@@ -18,7 +18,7 @@
                 
                 "<br/>model: "+model+"<br/>serial: "+serial+".</p>";
 
-            await _emailService.SendEmailAsync(employeeEmail, subject, body);
+            await _emailService.SendEmailAsync(employeeEmail, subject, body,"AMS");
         }
     }
 
