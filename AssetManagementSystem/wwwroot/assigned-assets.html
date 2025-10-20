@@ -5,66 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Assigned Assets - Asset Management System</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         :root {
-            --primary: #1a73e8;
-            --primary-dark: #0d47a1;
-            --primary-light: #e8f0fe;
-            --secondary: #5f6368;
-            --success: #34a853;
-            --warning: #f9ab00;
-            --danger: #ea4335;
-            --light: #f8f9fa;
-            --dark: #202124;
-            --border-radius: 8px;
-            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+            --primary: #3f51b5;
+            --primary-dark: #303f9f;
+            --primary-light: #e8eaf6;
+            --accent: #ff4081;
+            --secondary: #546e7a;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --background: #f5f7fa;
+            --surface: #ffffff;
+            --text-primary: #263238;
+            --text-secondary: #78909c;
+            --border: #e0e0e0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f5f7fa;
-            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
             line-height: 1.6;
+            font-size: 14px;
         }
 
+        /* Header Styles */
         .header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid var(--border);
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 24px;
+            padding: 0 32px;
             height: 64px;
+            max-width: 1920px;
+            margin: 0 auto;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
+            gap: 12px;
         }
 
         .logo {
-            height: 36px;
-            margin-right: 12px;
+            height: 32px;
         }
 
         .logo-text {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
 
         .user-info {
@@ -73,38 +90,57 @@
             gap: 16px;
         }
 
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
         .user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            font-size: 14px;
+            box-shadow: var(--shadow-sm);
         }
 
+        /* Layout */
         .main-container {
             display: flex;
+            max-width: 1920px;
+            margin: 0 auto;
             min-height: calc(100vh - 64px);
         }
 
+        /* Sidebar */
         .sidebar {
-            width: 240px;
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            width: 260px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
             padding: 24px 0;
+            height: calc(100vh - 64px);
+            position: sticky;
+            top: 64px;
+            overflow-y: auto;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
             padding: 12px 24px;
-            color: var(--secondary);
+            color: var(--text-secondary);
             text-decoration: none;
             transition: var(--transition);
             border-left: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 2px 0;
         }
 
             .nav-item:hover {
@@ -120,100 +156,387 @@
             }
 
             .nav-item i {
-                margin-right: 12px;
+                margin-right: 16px;
                 font-size: 20px;
             }
 
+        /* Content Area */
         .content {
             flex: 1;
-            padding: 24px;
+            padding: 32px;
+            background-color: var(--background);
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
         }
 
         .page-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--dark);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
         }
 
-        .table-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Card Styles - Paper-like elevation */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
             overflow: hidden;
+            margin-bottom: 24px;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid #eee;
+            .card:hover {
+                box-shadow: var(--shadow-lg);
+                transform: translateY(-2px);
+            }
+
+        .card-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(to bottom, var(--surface), #fafbfc);
         }
 
-        .table-title {
+        .card-title {
             font-size: 18px;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .dataTables_wrapper {
-            padding: 0 24px 24px;
+            .card-title i {
+                font-size: 22px;
+                color: var(--primary);
+            }
+
+        .card-body {
+            padding: 28px;
         }
 
-        table {
+        /* Form Styles */
+        .inline-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 13px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-input {
             width: 100%;
-            border-collapse: collapse;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: var(--transition);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
         }
 
-            table thead {
-                background-color: #f8f9fa;
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px var(--primary-light);
+                background: #ffffff;
             }
 
-            table th {
-                padding: 16px;
-                text-align: left;
-                font-weight: 600;
-                color: var(--secondary);
-                border-bottom: 1px solid #eee;
+            .form-input::placeholder {
+                color: #b0bec5;
             }
 
-            table td {
-                padding: 16px;
-                border-bottom: 1px solid #eee;
+        textarea.form-input {
+            resize: vertical;
+            min-height: 42px;
+        }
+
+        /* Select2 Customization */
+        .select2-container--default .select2-selection--single {
+            height: 42px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+        }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: 42px;
+                padding-left: 14px;
+                color: var(--text-primary);
+                font-size: 14px;
             }
 
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 40px;
+                right: 8px;
+            }
+
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .select2-dropdown {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Button Styles */
         .btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            box-shadow: var(--shadow-sm);
         }
 
+            .btn:hover {
+                box-shadow: var(--shadow-md);
+                transform: translateY(-1px);
+            }
+
+            .btn:active {
+                transform: translateY(0);
+            }
+
+            .btn i {
+                font-size: 18px;
+            }
+
         .btn-primary {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
         }
 
             .btn-primary:hover {
-                background-color: var(--primary-dark);
+                background: linear-gradient(135deg, var(--primary-dark), #283593);
             }
 
         .btn-return {
-            background-color: var(--success);
+            background: linear-gradient(135deg, var(--success), #388e3c);
             color: white;
         }
 
             .btn-return:hover {
-                background-color: #2e7d32;
+                background: linear-gradient(135deg, #388e3c, #2e7d32);
             }
 
+        .btn-secondary {
+            background: #f5f5f5;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+            .btn-secondary:hover {
+                background: #eeeeee;
+            }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Filters Section */
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 24px 28px;
+            background: linear-gradient(to bottom, #fafbfc, var(--surface));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Table Styles */
+        .dataTables-container {
+            padding: 0;
+        }
+
+        .dataTables_wrapper {
+            padding: 24px 28px;
+        }
+
+        table.dataTable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            table.dataTable thead th {
+                background: #fafbfc;
+                padding: 16px;
+                text-align: left;
+                font-weight: 600;
+                color: var(--text-secondary);
+                border-bottom: 2px solid var(--border);
+                font-size: 13px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            table.dataTable tbody td {
+                padding: 16px;
+                border-bottom: 1px solid #f5f5f5;
+                color: var(--text-primary);
+                font-size: 14px;
+            }
+
+            table.dataTable tbody tr {
+                transition: var(--transition);
+            }
+
+                table.dataTable tbody tr:hover {
+                    background-color: #fafbfc;
+                }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .status-assigned {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .status-returned {
+            background-color: #e8f5e9;
+            color: var(--success);
+        }
+
+        /* DataTables Custom Styling */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            margin-bottom: 16px;
+        }
+
+            .dataTables_wrapper .dataTables_length select,
+            .dataTables_wrapper .dataTables_filter input {
+                border: 1.5px solid var(--border);
+                border-radius: var(--radius-sm);
+                padding: 6px 10px;
+                font-size: 14px;
+                margin: 0 8px;
+            }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background: var(--primary);
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .dataTables_wrapper .dataTables_info {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+            .empty-state i {
+                font-size: 64px;
+                margin-bottom: 16px;
+                color: #cfd8dc;
+            }
+
+            .empty-state p {
+                font-size: 16px;
+                margin-top: 8px;
+            }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(-20px);
+            min-width: 300px;
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, var(--success), #388e3c);
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, var(--danger), #d32f2f);
+        }
+
+        .toast-info {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -225,69 +548,76 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(4px);
         }
 
         .modal-content {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
             width: 90%;
-            max-width: 500px;
-            padding: 24px;
+            max-width: 540px;
+            padding: 32px;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
         .modal-title {
             font-size: 20px;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
 
         .close {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
-            color: var(--secondary);
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+            color: var(--text-secondary);
             transition: var(--transition);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
-            .form-input:focus {
-                outline: none;
-                border-color: var(--primary);
-                box-shadow: 0 0 0 2px var(--primary-light);
+            .close:hover {
+                background: #f5f5f5;
+                color: var(--text-primary);
             }
 
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-top: 24px;
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .content {
+                padding: 24px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -297,7 +627,11 @@
 
             .sidebar {
                 width: 100%;
-                padding: 16px 0;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
             }
 
             .nav-item {
@@ -307,7 +641,56 @@
             .content {
                 padding: 16px;
             }
+
+            .inline-form {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .header-container {
+                padding: 0 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
         }
+
+        /* Loading State */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Enhanced Focus States */
+        *:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #999;
+            }
     </style>
 </head>
 
@@ -319,7 +702,7 @@
                 <span class="logo-text">Asset Management System</span>
             </div>
             <div class="user-info">
-                <span id="userName">John Doe</span>
+                <span class="user-name" id="userName">John Doe</span>
                 <div class="user-avatar">JD</div>
             </div>
         </div>
@@ -366,15 +749,86 @@
         </aside>
 
         <main class="content">
-            <h1 class="page-title">Assigned Assets</h1>
+            <div class="page-header">
+                <h1 class="page-title">Assigned Assets</h1>
+                <p class="page-subtitle">Manage and track asset assignments to employees</p>
+            </div>
 
-            <div class="table-container">
-                <div class="table-header">
-                    <h3 class="table-title">Currently Assigned Assets</h3>
-                    <button class="btn btn-primary" onclick="openAssignModal()">
-                        <i class="material-icons">add</i>
-                        Assign Asset
-                    </button>
+            <!-- Inline Assignment Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="material-icons">add_circle_outline</i>
+                        Assign New Asset
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form id="assignForm" class="inline-form">
+                        <div class="form-group">
+                            <label for="assetSelect" class="form-label">Asset</label>
+                            <select id="assetSelect" class="form-input searchable-dropdown" required>
+                                <option value="">Select an asset...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeSelect" class="form-label">Employee</label>
+                            <select id="employeeSelect" class="form-input searchable-dropdown" required>
+                                <option value="">Select an employee...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="locationSelect" class="form-label">Location</label>
+                            <select id="locationSelect" class="form-input searchable-dropdown" required>
+                                <option value="">Select a location...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectSelect" class="form-label">Project</label>
+                            <select id="projectSelect" class="form-input searchable-dropdown">
+                                <option value="">Select a project...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="comments" class="form-label">Comments</label>
+                            <textarea id="comments" class="form-input" rows="1" placeholder="Optional comments"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="material-icons">add</i>
+                                Assign Asset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Assigned Assets Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="material-icons">list_alt</i>
+                        Currently Assigned Assets
+                    </h3>
+                </div>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="employeeFilter" class="form-label">Filter by Employee</label>
+                        <select id="employeeFilter" class="form-input searchable-dropdown">
+                            <option value="">All Employees</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="locationFilter" class="form-label">Filter by Location</label>
+                        <select id="locationFilter" class="form-input searchable-dropdown">
+                            <option value="">All Locations</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="projectFilter" class="form-label">Filter by Project</label>
+                        <select id="projectFilter" class="form-input searchable-dropdown">
+                            <option value="">All Projects</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="dataTables-container">
                     <table id="assignedAssetsTable" class="display">
@@ -386,7 +840,7 @@
                                 <th>Location</th>
                                 <th>Project</th>
                                 <th>Date Assigned</th>
-                                <th>Comments</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -399,50 +853,6 @@
         </main>
     </div>
 
-    <!-- Assign Asset Modal -->
-    <div id="assignModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Assign Asset</h3>
-                <button class="close" onclick="closeModal()">&times;</button>
-            </div>
-            <form id="assignForm">
-                <div class="form-group">
-                    <label for="assetSelect" class="form-label">Select Asset</label>
-                    <select id="assetSelect" class="form-input" required>
-                        <option value="">Select an asset...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="employeeSelect" class="form-label">Select Employee</label>
-                    <select id="employeeSelect" class="form-input" required>
-                        <option value="">Select an employee...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="locationSelect" class="form-label">Select Location</label>
-                    <select id="locationSelect" class="form-input" required>
-                        <option value="">Select a location...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="projectSelect" class="form-label">Select Project</label>
-                    <select id="projectSelect" class="form-input" required>
-                        <option value="">Select a project...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="comments" class="form-label">Comments</label>
-                    <textarea id="comments" class="form-input" rows="3"></textarea>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Assign Asset</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Return Asset Modal -->
     <div id="returnModal" class="modal">
         <div class="modal-content">
@@ -452,18 +862,21 @@
             </div>
             <form id="returnForm">
                 <input type="hidden" id="returnStockId">
-                <div class="form-group">
-                    <p>Are you sure you want to return this asset?</p>
-                    <p><strong>Asset:</strong> <span id="returnAssetName"></span></p>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <p style="margin-bottom: 12px; color: var(--text-secondary);">Are you sure you want to return this asset?</p>
+                    <p style="margin-bottom: 8px;"><strong>Asset:</strong> <span id="returnAssetName"></span></p>
                     <p><strong>Assigned to:</strong> <span id="returnEmployeeName"></span></p>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom: 24px;">
                     <label for="returnComments" class="form-label">Return Comments</label>
-                    <textarea id="returnComments" class="form-input" rows="3"></textarea>
+                    <textarea id="returnComments" class="form-input" rows="3" placeholder="Add any notes about the asset return..."></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn" onclick="closeReturnModal()">Cancel</button>
-                    <button type="submit" class="btn btn-return">Return Asset</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeReturnModal()">Cancel</button>
+                    <button type="submit" class="btn btn-return">
+                        <i class="material-icons">keyboard_return</i>
+                        Return Asset
+                    </button>
                 </div>
             </form>
         </div>
@@ -471,6 +884,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         const token = localStorage.getItem("token");
         const name = localStorage.getItem("name");
@@ -490,7 +904,6 @@
             loadAssignedAssets();
             loadDropdownData();
 
-            // Form submission handlers
             document.getElementById('assignForm').addEventListener('submit', function (e) {
                 e.preventDefault();
                 assignAsset();
@@ -500,10 +913,31 @@
                 e.preventDefault();
                 returnAsset();
             });
+
+            initializeSearchableDropdowns();
+
+            $('#employeeFilter, #locationFilter, #projectFilter').on('change', function () {
+                filterTable();
+            });
         });
 
+        function initializeSearchableDropdowns() {
+            $('.searchable-dropdown').select2({
+                placeholder: function () {
+                    return $(this).data('placeholder') || "Search...";
+                },
+                allowClear: true,
+                width: '100%'
+            });
+
+            $('#assetSelect').data('select2').$container.find('.select2-selection__placeholder').text('Select an asset...');
+            $('#employeeSelect').data('select2').$container.find('.select2-selection__placeholder').text('Select an employee...');
+            $('#locationSelect').data('select2').$container.find('.select2-selection__placeholder').text('Select a location...');
+            $('#projectSelect').data('select2').$container.find('.select2-selection__placeholder').text('Select a project...');
+        }
+
         function loadAssignedAssets() {
-            fetch('/api/Asset/assigned?PageSize=1000') // Large page size to get all records
+            fetch('/api/Asset/assigned?PageSize=1000')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch assigned assets');
@@ -518,30 +952,45 @@
                     const tableBody = document.getElementById('assignedAssetsTableBody');
                     tableBody.innerHTML = '';
 
-                    data.data.forEach(assignment => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                                <td>${assignment.id}</td>
-                                <td>${assignment.asset}</td>
-                                <td>${assignment.employee}</td>
-                                <td>${assignment.location}</td>
-                                <td>${assignment.project}</td>
-                                <td>${formatDate(assignment.dateAssigned)}</td>
-                                <td>${assignment.comments || 'N/A'}</td>
-                                <td>
-                                    <button class="btn btn-return" onclick="openReturnModal(${assignment.assetId}, '${assignment.asset}', '${assignment.employee}')">
-                                        <i class="material-icons">keyboard_return</i>
-                                        Return
-                                    </button>
-                                </td>
+                    if (data.data && data.data.length > 0) {
+                        data.data.forEach(assignment => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                    <td><strong>#${assignment.id}</strong></td>
+                                    <td>${assignment.asset}</td>
+                                    <td>${assignment.employee}</td>
+                                    <td>${assignment.location}</td>
+                                    <td>${assignment.project || '<span style="color: var(--text-secondary);">N/A</span>'}</td>
+                                    <td>${formatDate(assignment.dateAssigned)}</td>
+                                    <td><span class="status-badge status-assigned">Assigned</span></td>
+                                    <td>
+                                        <button class="btn btn-return" onclick="openReturnModal(${assignment.assetId}, '${assignment.asset.replace(/'/g, "\\'")}', '${assignment.employee.replace(/'/g, "\\'")}')">
+                                            <i class="material-icons">keyboard_return</i>
+                                            Return
+                                        </button>
+                                    </td>
+                                `;
+                            tableBody.appendChild(row);
+                        });
+                    } else {
+                        tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="8" class="empty-state">
+                                        <i class="material-icons">inventory_2</i>
+                                        <p>No assets currently assigned</p>
+                                    </td>
+                                </tr>
                             `;
-                        tableBody.appendChild(row);
-                    });
+                    }
 
                     assignedAssetsDataTable = $('#assignedAssetsTable').DataTable({
                         pageLength: 10,
                         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-                        order: [[5, 'desc']]
+                        order: [[5, 'desc']],
+                        language: {
+                            emptyTable: "No assigned assets found",
+                            zeroRecords: "No matching assets found"
+                        }
                     });
                 })
                 .catch(error => {
@@ -551,7 +1000,6 @@
         }
 
         function loadDropdownData() {
-            // Load available assets
             fetch('/api/Asset/available')
                 .then(response => response.json())
                 .then(assets => {
@@ -564,61 +1012,77 @@
                         option.textContent = asset.makeModel;
                         assetSelect.appendChild(option);
                     });
+                    $('#assetSelect').trigger('change.select2');
                 });
 
-            // Load employees (you'll need to create this endpoint)
             fetch('/api/Employee/employees')
                 .then(response => response.json())
                 .then(emps => {
                     employees = emps;
                     const employeeSelect = document.getElementById('employeeSelect');
+                    const employeeFilter = document.getElementById('employeeFilter');
+
                     employeeSelect.innerHTML = '<option value="">Select an employee...</option>';
+                    employeeFilter.innerHTML = '<option value="">All Employees</option>';
+
                     emps.forEach(emp => {
                         const option = document.createElement('option');
                         option.value = emp.id;
                         option.textContent = emp.fullname;
-                        employeeSelect.appendChild(option);
+                        employeeSelect.appendChild(option.cloneNode(true));
+
+                        const filterOption = option.cloneNode(true);
+                        employeeFilter.appendChild(filterOption);
                     });
+
+                    $('#employeeSelect, #employeeFilter').trigger('change.select2');
                 });
 
-            // Load locations
             fetch('/api/Location/locations')
                 .then(response => response.json())
                 .then(locs => {
                     locations = locs;
                     const locationSelect = document.getElementById('locationSelect');
+                    const locationFilter = document.getElementById('locationFilter');
+
                     locationSelect.innerHTML = '<option value="">Select a location...</option>';
+                    locationFilter.innerHTML = '<option value="">All Locations</option>';
+
                     locs.forEach(loc => {
                         const option = document.createElement('option');
                         option.value = loc.id;
                         option.textContent = loc.location;
-                        locationSelect.appendChild(option);
+                        locationSelect.appendChild(option.cloneNode(true));
+
+                        const filterOption = option.cloneNode(true);
+                        locationFilter.appendChild(filterOption);
                     });
+
+                    $('#locationSelect, #locationFilter').trigger('change.select2');
                 });
 
-            // Load projects (you'll need to create this endpoint)
             fetch('/api/Project/projects')
                 .then(response => response.json())
                 .then(projs => {
                     projects = projs;
                     const projectSelect = document.getElementById('projectSelect');
+                    const projectFilter = document.getElementById('projectFilter');
+
                     projectSelect.innerHTML = '<option value="">Select a project...</option>';
+                    projectFilter.innerHTML = '<option value="">All Projects</option>';
+
                     projs.forEach(proj => {
                         const option = document.createElement('option');
                         option.value = proj.id;
                         option.textContent = proj.project;
-                        projectSelect.appendChild(option);
+                        projectSelect.appendChild(option.cloneNode(true));
+
+                        const filterOption = option.cloneNode(true);
+                        projectFilter.appendChild(filterOption);
                     });
+
+                    $('#projectSelect, #projectFilter').trigger('change.select2');
                 });
-        }
-
-        function openAssignModal() {
-            document.getElementById('assignModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('assignModal').style.display = 'none';
-            document.getElementById('assignForm').reset();
         }
 
         function openReturnModal(stockId, assetName, employeeName) {
@@ -634,13 +1098,23 @@
         }
 
         function assignAsset() {
+            const assetSelect = document.getElementById('assetSelect');
+            const employeeSelect = document.getElementById('employeeSelect');
+            const locationSelect = document.getElementById('locationSelect');
+            const projectSelect = document.getElementById('projectSelect');
+
             const formData = {
-                stockId: parseInt(document.getElementById('assetSelect').value),
-                employeeId: parseInt(document.getElementById('employeeSelect').value),
-                locationId: parseInt(document.getElementById('locationSelect').value),
-                projectId: parseInt(document.getElementById('projectSelect').value),
+                stockId: parseInt(assetSelect.value),
+                employeeId: parseInt(employeeSelect.value),
+                locationId: parseInt(locationSelect.value),
+                projectId: projectSelect.value ? parseInt(projectSelect.value) : null,
                 comments: document.getElementById('comments').value
             };
+
+            const submitBtn = document.querySelector('#assignForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="material-icons">hourglass_empty</i> Assigning...';
+            submitBtn.disabled = true;
 
             fetch('/api/Asset/assign', {
                 method: 'POST',
@@ -660,13 +1134,18 @@
                 })
                 .then(result => {
                     showToast('Asset assigned successfully', 'success');
-                    closeModal();
+                    document.getElementById('assignForm').reset();
+                    $('.searchable-dropdown').val(null).trigger('change');
                     loadAssignedAssets();
-                    loadDropdownData(); // Reload available assets
+                    loadDropdownData();
                 })
                 .catch(error => {
                     console.error('Error assigning asset:', error);
                     showToast(error.message || 'Failed to assign asset', 'error');
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
                 });
         }
 
@@ -675,6 +1154,11 @@
                 stockId: parseInt(document.getElementById('returnStockId').value),
                 comments: document.getElementById('returnComments').value
             };
+
+            const submitBtn = document.querySelector('#returnForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="material-icons">hourglass_empty</i> Returning...';
+            submitBtn.disabled = true;
 
             fetch('/api/Asset/return', {
                 method: 'POST',
@@ -696,41 +1180,79 @@
                     showToast('Asset returned successfully', 'success');
                     closeReturnModal();
                     loadAssignedAssets();
-                    loadDropdownData(); // Reload available assets
+                    loadDropdownData();
                 })
                 .catch(error => {
                     console.error('Error returning asset:', error);
                     showToast(error.message || 'Failed to return asset', 'error');
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
                 });
+        }
+
+        function filterTable() {
+            const employeeFilter = $('#employeeFilter').val();
+            const locationFilter = $('#locationFilter').val();
+            const projectFilter = $('#projectFilter').val();
+
+            assignedAssetsDataTable.columns().search('').draw();
+
+            if (employeeFilter) {
+                assignedAssetsDataTable.column(2).search(employeeFilter, true, false).draw();
+            }
+
+            if (locationFilter) {
+                assignedAssetsDataTable.column(3).search(locationFilter, true, false).draw();
+            }
+
+            if (projectFilter) {
+                assignedAssetsDataTable.column(4).search(projectFilter, true, false).draw();
+            }
         }
 
         function formatDate(dateString) {
             const date = new Date(dateString);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
         }
 
         function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 500;
-                    z-index: 1000;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                `;
+            const existingToasts = document.querySelectorAll('.toast');
+            existingToasts.forEach(toast => toast.remove());
 
-            toast.style.backgroundColor = type === 'error' ? 'var(--danger)' :
-                type === 'success' ? 'var(--success)' : 'var(--primary)';
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
             toast.textContent = message;
             document.body.appendChild(toast);
 
             setTimeout(() => {
-                document.body.removeChild(toast);
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+            }, 10);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
             }, 3000);
+        }
+
+        const modal = document.getElementById('returnModal');
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                closeReturnModal();
+            }
         }
     </script>
 </body>

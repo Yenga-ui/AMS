@@ -5,66 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Locations - Asset Management System</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         :root {
-            --primary: #1a73e8;
-            --primary-dark: #0d47a1;
-            --primary-light: #e8f0fe;
-            --secondary: #5f6368;
-            --success: #34a853;
-            --warning: #f9ab00;
-            --danger: #ea4335;
-            --light: #f8f9fa;
-            --dark: #202124;
-            --border-radius: 8px;
-            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+            --primary: #3f51b5;
+            --primary-dark: #303f9f;
+            --primary-light: #e8eaf6;
+            --accent: #ff4081;
+            --secondary: #546e7a;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --background: #f5f7fa;
+            --surface: #ffffff;
+            --text-primary: #263238;
+            --text-secondary: #78909c;
+            --border: #e0e0e0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f5f7fa;
-            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
             line-height: 1.6;
+            font-size: 14px;
         }
 
+        /* Header Styles */
         .header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid var(--border);
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 24px;
+            padding: 0 32px;
             height: 64px;
+            max-width: 1920px;
+            margin: 0 auto;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
+            gap: 12px;
         }
 
         .logo {
-            height: 36px;
-            margin-right: 12px;
+            height: 32px;
         }
 
         .logo-text {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            color: var(--primary);
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
 
         .user-info {
@@ -73,38 +90,57 @@
             gap: 16px;
         }
 
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
         .user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            font-size: 14px;
+            box-shadow: var(--shadow-sm);
         }
 
+        /* Layout */
         .main-container {
             display: flex;
+            max-width: 1920px;
+            margin: 0 auto;
             min-height: calc(100vh - 64px);
         }
 
+        /* Sidebar */
         .sidebar {
-            width: 240px;
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            width: 260px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
             padding: 24px 0;
+            height: calc(100vh - 64px);
+            position: sticky;
+            top: 64px;
+            overflow-y: auto;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
             padding: 12px 24px;
-            color: var(--secondary);
+            color: var(--text-secondary);
             text-decoration: none;
             transition: var(--transition);
             border-left: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 2px 0;
         }
 
             .nav-item:hover {
@@ -120,114 +156,314 @@
             }
 
             .nav-item i {
-                margin-right: 12px;
+                margin-right: 16px;
                 font-size: 20px;
             }
 
+        /* Content Area */
         .content {
             flex: 1;
-            padding: 24px;
+            padding: 32px;
+            background-color: var(--background);
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
         }
 
         .page-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--dark);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
         }
 
-        .table-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Card Styles - Paper-like elevation */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
             overflow: hidden;
+            margin-bottom: 24px;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid #eee;
+            .card:hover {
+                box-shadow: var(--shadow-lg);
+                transform: translateY(-2px);
+            }
+
+        .card-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(to bottom, var(--surface), #fafbfc);
         }
 
-        .table-title {
+        .card-title {
             font-size: 18px;
             font-weight: 600;
-            color: var(--dark);
-        }
-
-        .dataTables_wrapper {
-            padding: 0 24px 24px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-            table thead {
-                background-color: #f8f9fa;
-            }
-
-            table th {
-                padding: 16px;
-                text-align: left;
-                font-weight: 600;
-                color: var(--secondary);
-                border-bottom: 1px solid #eee;
-            }
-
-            table td {
-                padding: 16px;
-                border-bottom: 1px solid #eee;
-            }
-
-        .actions-cell {
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
             display: flex;
+            align-items: center;
             gap: 8px;
         }
 
+            .card-title i {
+                font-size: 22px;
+                color: var(--primary);
+            }
+
+        .card-body {
+            padding: 28px;
+        }
+
+        /* Form Styles */
+        .inline-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 13px;
+            letter-spacing: 0.2px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: var(--transition);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px var(--primary-light);
+                background: #ffffff;
+            }
+
+            .form-input::placeholder {
+                color: #b0bec5;
+            }
+
+        /* Button Styles */
         .btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            box-shadow: var(--shadow-sm);
         }
 
+            .btn:hover {
+                box-shadow: var(--shadow-md);
+                transform: translateY(-1px);
+            }
+
+            .btn:active {
+                transform: translateY(0);
+            }
+
+            .btn i {
+                font-size: 18px;
+            }
+
         .btn-primary {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
         }
 
             .btn-primary:hover {
-                background-color: var(--primary-dark);
+                background: linear-gradient(135deg, var(--primary-dark), #283593);
             }
 
-        .btn-edit {
-            background-color: var(--warning);
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #d32f2f);
             color: white;
         }
 
-            .btn-edit:hover {
-                background-color: #e09a00;
+            .btn-danger:hover {
+                background: linear-gradient(135deg, #d32f2f, #b71c1c);
             }
 
-        .btn-delete {
-            background-color: var(--danger);
-            color: white;
+        .btn-secondary {
+            background: #f5f5f5;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
         }
 
-            .btn-delete:hover {
-                background-color: #d32f2f;
+            .btn-secondary:hover {
+                background: #eeeeee;
             }
 
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Table Styles */
+        .dataTables-container {
+            padding: 0;
+        }
+
+        .dataTables_wrapper {
+            padding: 24px 28px;
+        }
+
+        table.dataTable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            table.dataTable thead th {
+                background: #fafbfc;
+                padding: 16px;
+                text-align: left;
+                font-weight: 600;
+                color: var(--text-secondary);
+                border-bottom: 2px solid var(--border);
+                font-size: 13px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            table.dataTable tbody td {
+                padding: 16px;
+                border-bottom: 1px solid #f5f5f5;
+                color: var(--text-primary);
+                font-size: 14px;
+            }
+
+            table.dataTable tbody tr {
+                transition: var(--transition);
+            }
+
+                table.dataTable tbody tr:hover {
+                    background-color: #fafbfc;
+                }
+
+        /* DataTables Custom Styling */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            margin-bottom: 16px;
+        }
+
+            .dataTables_wrapper .dataTables_length select,
+            .dataTables_wrapper .dataTables_filter input {
+                border: 1.5px solid var(--border);
+                border-radius: var(--radius-sm);
+                padding: 6px 10px;
+                font-size: 14px;
+                margin: 0 8px;
+            }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background: var(--primary);
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .dataTables_wrapper .dataTables_info {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+            .empty-state i {
+                font-size: 64px;
+                margin-bottom: 16px;
+                color: #cfd8dc;
+            }
+
+            .empty-state p {
+                font-size: 16px;
+                margin-top: 8px;
+            }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(-20px);
+            min-width: 300px;
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, var(--success), #388e3c);
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, var(--danger), #d32f2f);
+        }
+
+        .toast-info {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -239,69 +475,76 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(4px);
         }
 
         .modal-content {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
             width: 90%;
             max-width: 500px;
-            padding: 24px;
+            padding: 32px;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
         .modal-title {
             font-size: 20px;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
 
         .close {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
-            color: var(--secondary);
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+            color: var(--text-secondary);
             transition: var(--transition);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
-            .form-input:focus {
-                outline: none;
-                border-color: var(--primary);
-                box-shadow: 0 0 0 2px var(--primary-light);
+            .close:hover {
+                background: #f5f5f5;
+                color: var(--text-primary);
             }
 
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-top: 24px;
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .content {
+                padding: 24px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -311,7 +554,11 @@
 
             .sidebar {
                 width: 100%;
-                padding: 16px 0;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
             }
 
             .nav-item {
@@ -322,9 +569,70 @@
                 padding: 16px;
             }
 
-            .actions-cell {
-                flex-direction: column;
+            .inline-form {
+                grid-template-columns: 1fr;
             }
+
+            .header-container {
+                padding: 0 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+        }
+
+        /* Loading State */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Enhanced Focus States */
+        *:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #999;
+            }
+
+        /* Action Buttons Container */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Location Icon */
+        .location-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 16px;
         }
     </style>
 </head>
@@ -337,7 +645,7 @@
                 <span class="logo-text">Asset Management System</span>
             </div>
             <div class="user-info">
-                <span id="userName">John Doe</span>
+                <span class="user-name" id="userName">John Doe</span>
                 <div class="user-avatar">JD</div>
             </div>
         </div>
@@ -384,21 +692,49 @@
         </aside>
 
         <main class="content">
-            <h1 class="page-title">Locations</h1>
+            <div class="page-header">
+                <h1 class="page-title">Location Management</h1>
+                <p class="page-subtitle">Manage physical locations for asset assignments</p>
+            </div>
 
-            <div class="table-container">
-                <div class="table-header">
-                    <h3 class="table-title">All Locations</h3>
-                    <button class="btn btn-primary" onclick="openAddModal()">
-                        <i class="material-icons">add</i>
-                        Add Location
-                    </button>
+            <!-- Add Location Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="material-icons">add_circle_outline</i>
+                        Add New Location
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form id="locationForm" class="inline-form">
+                        <div class="form-group">
+                            <label for="locationName" class="form-label">Location Name</label>
+                            <input type="text" id="locationName" class="form-input" placeholder="e.g., Main Office, Warehouse A" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="material-icons">add_location</i>
+                                Add Location
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Locations Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="material-icons">list_alt</i>
+                        All Locations
+                    </h3>
                 </div>
                 <div class="dataTables-container">
                     <table id="locationsTable" class="display">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th></th>
+                                <th>Location ID</th>
                                 <th>Location Name</th>
                                 <th>Created Date</th>
                                 <th>Last Updated</th>
@@ -414,22 +750,25 @@
         </main>
     </div>
 
-    <!-- Add/Edit Location Modal -->
-    <div id="locationModal" class="modal">
+    <!-- Edit Location Modal -->
+    <div id="editLocationModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Add Location</h3>
-                <button class="close" onclick="closeModal()">&times;</button>
+                <h3 class="modal-title">Edit Location</h3>
+                <button class="close" onclick="closeEditLocationModal()">&times;</button>
             </div>
-            <form id="locationForm">
-                <input type="hidden" id="locationId">
-                <div class="form-group">
-                    <label for="locationName" class="form-label">Location Name</label>
-                    <input type="text" id="locationName" class="form-input" required>
+            <form id="editLocationForm">
+                <input type="hidden" id="editLocationId">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="editLocationName" class="form-label">Location Name</label>
+                    <input type="text" id="editLocationName" class="form-input" required>
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Location</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditLocationModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="material-icons">save</i>
+                        Save Changes
+                    </button>
                 </div>
             </form>
         </div>
@@ -446,16 +785,20 @@
         }
 
         let locationsDataTable;
-        let currentEditingId = null;
+        let locations = [];
 
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('userName').textContent = name;
             loadLocations();
 
-            // Form submission handler
             document.getElementById('locationForm').addEventListener('submit', function (e) {
                 e.preventDefault();
-                saveLocation();
+                addLocation();
+            });
+
+            document.getElementById('editLocationForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                updateLocation();
             });
         });
 
@@ -467,7 +810,9 @@
                     }
                     return response.json();
                 })
-                .then(locations => {
+                .then(data => {
+                    locations = data;
+
                     if (locationsDataTable) {
                         locationsDataTable.destroy();
                     }
@@ -475,31 +820,55 @@
                     const tableBody = document.getElementById('locationsTableBody');
                     tableBody.innerHTML = '';
 
-                    locations.forEach(location => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                                <td>${location.id}</td>
-                                <td>${location.location}</td>
-                                <td>${formatDate(location.createdDate)}</td>
-                                <td>${location.lastUpdated ? formatDate(location.lastUpdated) : 'N/A'}</td>
-                                <td class="actions-cell">
-                                    <button class="btn btn-edit" onclick="editLocation(${location.id}, '${location.location}')">
-                                        <i class="material-icons">edit</i>
-                                        Edit
-                                    </button>
-                                    <button class="btn btn-delete" onclick="deleteLocation(${location.id})">
-                                        <i class="material-icons">delete</i>
-                                        Delete
-                                    </button>
-                                </td>
+                    if (data && data.length > 0) {
+                        data.forEach(location => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                    <td>
+                                        <div class="location-icon">
+                                            <i class="material-icons">location_on</i>
+                                        </div>
+                                    </td>
+                                    <td><strong>#${location.id}</strong></td>
+                                    <td>
+                                        <div style="display: flex; align-items: center;">
+                                            <div style="font-weight: 600;">${location.location}</div>
+                                        </div>
+                                    </td>
+                                    <td>${formatDate(location.createdDate)}</td>
+                                    <td>${location.lastUpdated ? formatDate(location.lastUpdated) : 'N/A'}</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-primary btn-small" onclick="openEditLocationModal(${location.id})">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                            <button class="btn btn-danger btn-small" onclick="deleteLocation(${location.id}, '${location.location.replace(/'/g, "\\'")}')">
+                                                <i class="material-icons">delete</i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                `;
+                            tableBody.appendChild(row);
+                        });
+                    } else {
+                        tableBody.innerHTML = `
+                                <tr>
+                                    <td colspan="6" class="empty-state">
+                                        <i class="material-icons">location_off</i>
+                                        <p>No locations found</p>
+                                    </td>
+                                </tr>
                             `;
-                        tableBody.appendChild(row);
-                    });
+                    }
 
                     locationsDataTable = $('#locationsTable').DataTable({
                         pageLength: 10,
                         lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-                        order: [[1, 'asc']]
+                        order: [[2, 'asc']],
+                        language: {
+                            emptyTable: "No locations found",
+                            zeroRecords: "No matching locations found"
+                        }
                     });
                 })
                 .catch(error => {
@@ -508,27 +877,21 @@
                 });
         }
 
-        function openAddModal() {
-            currentEditingId = null;
-            document.getElementById('modalTitle').textContent = 'Add Location';
-            document.getElementById('locationForm').reset();
-            document.getElementById('locationModal').style.display = 'flex';
+        function openEditLocationModal(locationId) {
+            const location = locations.find(loc => loc.id === locationId);
+            if (location) {
+                document.getElementById('editLocationId').value = location.id;
+                document.getElementById('editLocationName').value = location.location;
+                document.getElementById('editLocationModal').style.display = 'flex';
+            }
         }
 
-        function editLocation(id, name) {
-            currentEditingId = id;
-            document.getElementById('modalTitle').textContent = 'Edit Location';
-            document.getElementById('locationId').value = id;
-            document.getElementById('locationName').value = name;
-            document.getElementById('locationModal').style.display = 'flex';
+        function closeEditLocationModal() {
+            document.getElementById('editLocationModal').style.display = 'none';
+            document.getElementById('editLocationForm').reset();
         }
 
-        function closeModal() {
-            document.getElementById('locationModal').style.display = 'none';
-            currentEditingId = null;
-        }
-
-        function saveLocation() {
+        function addLocation() {
             const locationName = document.getElementById('locationName').value.trim();
 
             if (!locationName) {
@@ -536,93 +899,161 @@
                 return;
             }
 
-            const url = currentEditingId
-                ? `/api/Location/locations/${currentEditingId}`
-                : '/api/Location/locations';
+            const formData = {
+                Location: locationName
+            };
 
-            const method = currentEditingId ? 'PUT' : 'POST';
-            const data = currentEditingId
-                ? { id: currentEditingId, location: locationName }
-                : { location: locationName };
+            const submitBtn = document.querySelector('#locationForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="material-icons">hourglass_empty</i> Adding...';
+            submitBtn.disabled = true;
 
-            fetch(url, {
-                method: method,
+            fetch('/api/Location/locations', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(formData)
             })
                 .then(response => {
                     if (!response.ok) {
                         return response.text().then(text => {
-                            throw new Error(text || 'Failed to save location');
+                            throw new Error(text || 'Failed to add location');
                         });
                     }
                     return response.json();
                 })
-                .then(() => {
-                    showToast(`Location ${currentEditingId ? 'updated' : 'added'} successfully`, 'success');
-                    closeModal();
+                .then(result => {
+                    showToast('Location added successfully', 'success');
+                    document.getElementById('locationForm').reset();
                     loadLocations();
                 })
                 .catch(error => {
-                    console.error('Error saving location:', error);
-                    showToast(error.message || 'Failed to save location', 'error');
+                    console.error('Error adding location:', error);
+                    showToast(error.message || 'Failed to add location', 'error');
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
                 });
         }
 
-        function deleteLocation(id) {
-            if (!confirm('Are you sure you want to delete this location?')) {
+        function updateLocation() {
+            const locationId = parseInt(document.getElementById('editLocationId').value);
+            const locationName = document.getElementById('editLocationName').value.trim();
+
+            if (!locationName) {
+                showToast('Location name is required', 'error');
                 return;
             }
 
-            fetch(`/api/Location/locations/${id}`, {
-                method: 'DELETE',
+            const formData = {
+                Id: locationId,
+                Location: locationName
+            };
+
+            const submitBtn = document.querySelector('#editLocationForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="material-icons">hourglass_empty</i> Saving...';
+            submitBtn.disabled = true;
+
+            fetch(`/api/Location/locations/${locationId}`, {
+                method: 'PUT',
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                }
+                },
+                body: JSON.stringify(formData)
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to delete location');
+                        return response.text().then(text => {
+                            throw new Error(text || 'Failed to update location');
+                        });
                     }
-                    showToast('Location deleted successfully', 'success');
+                    return response.json();
+                })
+                .then(result => {
+                    showToast('Location updated successfully', 'success');
+                    closeEditLocationModal();
                     loadLocations();
                 })
                 .catch(error => {
-                    console.error('Error deleting location:', error);
-                    showToast('Failed to delete location', 'error');
+                    console.error('Error updating location:', error);
+                    showToast(error.message || 'Failed to update location', 'error');
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
                 });
         }
 
+        function deleteLocation(locationId, locationName) {
+            if (confirm(`Are you sure you want to delete "${locationName}"? This action cannot be undone.`)) {
+                fetch(`/api/Location/locations/${locationId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to delete location');
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        showToast('Location deleted successfully', 'success');
+                        loadLocations();
+                    })
+                    .catch(error => {
+                        console.error('Error deleting location:', error);
+                        showToast('Failed to delete location', 'error');
+                    });
+            }
+        }
+
         function formatDate(dateString) {
+            if (!dateString) return 'N/A';
             const date = new Date(dateString);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
         }
 
         function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 12px 24px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 500;
-                    z-index: 1000;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                `;
+            const existingToasts = document.querySelectorAll('.toast');
+            existingToasts.forEach(toast => toast.remove());
 
-            toast.style.backgroundColor = type === 'error' ? 'var(--danger)' :
-                type === 'success' ? 'var(--success)' : 'var(--primary)';
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
             toast.textContent = message;
             document.body.appendChild(toast);
 
             setTimeout(() => {
-                document.body.removeChild(toast);
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+            }, 10);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
             }, 3000);
+        }
+
+        const modal = document.getElementById('editLocationModal');
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                closeEditLocationModal();
+            }
         }
     </script>
 </body>

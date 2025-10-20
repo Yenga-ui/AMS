@@ -130,7 +130,7 @@ public class LocationController : ControllerBase
             }
         }
 
-        return NoContent();
+        return Ok(new { message = location + " Updated successfully" });
     }
 
     // DELETE: api/Location/locations/5
